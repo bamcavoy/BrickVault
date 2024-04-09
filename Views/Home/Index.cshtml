@@ -3,6 +3,11 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <img src="~/lib/Logo.png" style="height: 200px"></img>
+    <br/> <br/>
+    <form class="form-inline" asp-controller="Home" asp-action="Products">
+        <button type="submit" class="btn text-white" style="background: deepskyblue">Browse Products</button>
+    </form>
+    <br/><br/><br/>
+    <a asp-controller="Home" asp-action="ReviewOrders">Review Orders</a>
 </div>
