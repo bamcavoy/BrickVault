@@ -7,9 +7,18 @@ namespace BrickVault.Controllers;
 
 public class HomeController : Controller
 {
-
+    private ILegoRepository _repo;
+    public HomeController(ILegoRepository tmp)
+    {
+        _repo = tmp;
+    }
+    
     public IActionResult Index()
     {
+        ViewBag.Products = _repo.Products
+            .OrderBy(x => x.Name)
+            .ToList();
+        
         return View();
     }
 
