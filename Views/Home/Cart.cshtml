@@ -1,0 +1,55 @@
+@{
+    ViewData["Title"] = "Cart";
+    var random = new Random();
+    int cartTotal = 0;
+}
+
+<h1>Cart</h1>
+<br/>
+<div class="container align-content-center col-10">
+    <table class="table table-hover">
+        <thead class="dark">
+        <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Item Total</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (var i = 0; i < 10; i++)
+        {
+            int quantity = random.Next(0, 6);
+            int price = random.Next(15, 201);
+            int itemTotal = quantity * price;
+            cartTotal += itemTotal;
+
+            <tr>
+                <td>Millennium Falcon</td>
+                <td>@quantity</td>
+                <td>@price</td>
+                <td>@itemTotal</td>
+                <td><button class="btn btn-danger">Delete</button></td>
+            </tr>
+        }
+        <thead>
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <th>Cart Total:<br/><span class="fw-normal">$@cartTotal</span></th>
+            </tr>
+        </thead>
+        </tbody>
+    </table>
+<div class="row">
+    <div class="col-6">
+        <button class="btn btn-primary">Keep Shopping</button>
+    </div>
+    <div class="col-6 text-end">
+        <button class="btn btn-success">Proceed to Checkout</button>
+    </div>
+</div>
+</div>
