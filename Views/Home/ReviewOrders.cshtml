@@ -1,0 +1,32 @@
+@{
+    ViewData["Title"] = "Review Orders";
+    var random = new Random();
+}
+
+<h1>Review Orders</h1>
+<br/>
+<div class="container align-content-center col-10">
+    <table class="table table-hover">
+        <thead class="dark">
+        <tr>
+            <th>Transaction ID</th>
+            <th>Country of Transaction</th>
+            <th>Total</th>
+            <th>Order Date</th>
+            <th>Flag</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (var i = 0; i < 10; i++)
+        {
+            <tr>
+                <td>Row @i</td>
+                <td>USA</td>
+                <td>@random.Next(0, 101)</td>
+                <td>10/22/2023</td>
+                <td>Needs review!</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
