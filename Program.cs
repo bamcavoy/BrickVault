@@ -1,27 +1,38 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using BrickVault.Data;
+using BrickVault.Models;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
+
 //using Microsoft.EntityFrameworkCore.Sqlite;
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-services.AddAuthentication().AddGoogle(googleOptions =>
-{
-    googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
-    googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
-});
+var myAppConn= builder.Configuration.GetConnectionString("Constr");
 
-// Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-                       throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlite(connectionString));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+// services.AddAuthentication().AddGoogle(googleOptions =>
+// {
+//     googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
+//     googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
+// });
+
+var keyVault =
+    "@Microsoft.KeyVault(SecretUri=https://intexvault2-15.vault.azure.net/secrets/IntexAzureConnectionString/6d069c01e09e4776916eb1e5ea3850ce)";
+
+builder.Services.AddDbContext<IntexDbContext>(options =>
+    {
+        options.UseSqlite(builder.Configuration[keyVault]);
+    }
+);
+
+builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<IntexDbContext>();
+
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
