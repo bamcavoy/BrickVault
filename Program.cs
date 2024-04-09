@@ -24,7 +24,7 @@ var keyVault =
 
 builder.Services.AddDbContext<IntexDbContext>(options =>
     {
-        options.UseSqlite(builder.Configuration[keyVault]);
+        options.UseSqlServer(builder.Configuration[keyVault]);
     }
 );
 

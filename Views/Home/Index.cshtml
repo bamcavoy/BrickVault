@@ -8,6 +8,11 @@
     <form class="form-inline" asp-controller="Home" asp-action="Products">
         <button type="submit" class="btn text-white" style="background: deepskyblue">Browse Products</button>
     </form>
+    
+    @foreach (Product p in ViewBag.Products)
+    {
+        <p>@p.Name</p>
+    }
     <br/><br/><br/>
     <a asp-controller="Home" asp-action="ReviewOrders">Review Orders</a>
 </div>
