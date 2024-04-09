@@ -16,4 +16,19 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    public IActionResult Products()
+    {
+        return View();
+    }
+    
+    public IActionResult AboutUs()
+    {
+        return View();
+    }
+    
+    public IActionResult ReviewOrders()
+    {
+        return View();
+    }
 }
