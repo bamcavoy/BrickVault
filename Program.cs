@@ -19,12 +19,9 @@ var myAppConn= builder.Configuration.GetConnectionString("Constr");
 //     googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
 // });
 
-var keyVault =
-    "@Microsoft.KeyVault(SecretUri=https://intexvault2-15.vault.azure.net/secrets/IntexAzureConnectionString/6d069c01e09e4776916eb1e5ea3850ce)";
-
 builder.Services.AddDbContext<IntexDbContext>(options =>
     {
-        options.UseSqlServer(builder.Configuration[keyVault]);
+        options.UseSqlServer(builder.Configuration["ConnectionStrings:AzureConnection"]);
     }
 );
 
