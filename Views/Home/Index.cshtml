@@ -1,18 +1,34 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
+    List<Product> products = ViewBag.Products;
 }
+
 
 <div class="text-center">
     <img src="~/lib/Logo.png" style="height: 200px"></img>
     <br/> <br/>
     <form class="form-inline" asp-controller="Home" asp-action="Products">
-        <button type="submit" class="btn text-white" style="background: deepskyblue">Browse Products</button>
+      <button type="submit" class="btn text-white" style="background: deepskyblue">Browse Products</button>
     </form>
-    
-    @foreach (Product p in ViewBag.Products)
+</div>
+<br/><br/>
+<div class="container">
+  <h2>Recommended Products</h2>
+  <div class="row">
+    @for(var i = 0; i < 5; i++)
     {
-        <p>@p.Name</p>
+      <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="card">
+          <div class="card-body">
+            <!-- Placeholder for card content -->
+            <p class="fw-light">card content here</p>
+            <br/>
+            <p class="fw-bold">@products[i].Name</p>
+          </div>
+        </div>
+      </div>
     }
+  </div>
+</div>
     <br/><br/><br/>
     <a asp-controller="Home" asp-action="ReviewOrders">Review Orders</a>
-</div>

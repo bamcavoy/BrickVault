@@ -27,7 +27,7 @@ public class HomeController : Controller
         return View();
     }
     
-    public IActionResult Products(int pageNum)
+    public IActionResult Products(int pageNum = 1)
     {
         int pageSize = 5;
         
