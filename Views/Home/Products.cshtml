@@ -4,42 +4,85 @@
 
 @model ProductListViewModel
 
-<h1>Products</h1>
-<br/>
 <div class="container">
-  <div class="row">
-    <div class="col-md-3">
-      <!-- Filter Column -->
-      <div class="card">
-        <div class="card-header">
-          Filters
-        </div>
-        <div class="card-body">
-          <!-- Placeholder for filtering -->
-          Filtering here
-        </div>
-      </div>
-    </div>
-    
-    <div class="col-md-9">
-      <!-- Cards Column -->
-      <div class="row">
-        @foreach (Product p in Model.Products)
-        {        
-          <div class="col-md-6 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <!-- Placeholder for card content -->
-                <p class="fw-light">card content here</p>
-                <br/>
-                <p class="fw-bold">@p.Name</p>
-              </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-8">
+                <h1>Products</h1>
             </div>
-          </div>
-        }
-      </div>
-      <div page-model="@Model.PaginationInfo" page-action="Products" page-class-enabled="true" page-class="btn"
-           page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
+            <div class="col-4">
+                <!-- Filter Column -->
+                <div class="card">
+                    <div class="card-header">
+                        Filters
+                    </div>
+                    <div class="card-body">
+                        <form asp-controller="Home" asp-action="Products" method="get">
+                            <div class="form-group">
+                                <label for="itemsPerPage">Items Per Page:</label>
+                                <select class="form-control" id="itemsPerPage" name="itemsPerPage">
+                                    <option value="5">5</option>
+                                    <option value="10">10</option>
+                                    <option value="20">20</option>
+                                </select>
+                                <label for="category">Category:</label>
+                                <select class="form-control" id="category" name="category">
+                                    @foreach (Category c in Model.Categories)
+                                    {
+                                        <option value="@c.CategoryId">@c.CategoryName</option>
+                                    }
+                                </select>
+                                <select class="form-control" id="category" name="category" multiple>
+                                    @foreach (Category c in Model.Categories)
+                                    {
+                                        <option value="@c.CategoryId">@c.CategoryName</option>
+                                    }
+                                </select>
+                                <select class="form-control" id="color" name="color" multiple>
+                                    @foreach (string c in Model.Colors)
+                                    {
+                                        <option value="c">@c</option>
+                                    }
+                                </select>
+                            </div>
+                            <br/>
+                            <button type="submit" class="btn btn-primary">Apply</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
+    <br/><br/>
+  
+    <div class="row">
+        <div class="col-1"></div>
+        @{
+            int i = 0;
+            foreach (Product p in Model.Products)
+            {
+                i++;
+                <div class="col-2">
+                    <div class="card">
+                        <div class="card-body">
+                            <!-- Placeholder for card content -->
+                            <p class="fw-light">card content here</p>
+                            <br/>
+                            <p class="fw-bold">@p.Name</p>
+                        </div>
+                    </div>
+                </div>
+                if (i % 5 == 0)
+                {
+                    <p></p>
+                    <br/>
+                    <div class="col-1"></div>
+                }
+            }
+        }
+        <div class="col-1"></div>
+    </div>
+    <br/>
+    <div page-model="@Model.PaginationInfo" page-action="Products" page-class-enabled="true" page-class="btn"
+         page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
 </div>
