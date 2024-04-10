@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using IdentityDbContext = Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext;
+
 
 namespace BrickVault.Models;
 
-public partial class IntexDbContext : DbContext
+public partial class IntexDbContext : IdentityDbContext
 {
     public IntexDbContext()
     {
@@ -32,6 +36,7 @@ public partial class IntexDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
         modelBuilder.Entity<Category>(entity =>
         {
             entity
