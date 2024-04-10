@@ -10,11 +10,11 @@ namespace BrickVault.Controllers.Infrastructure
     [HtmlTargetElement("div", Attributes = "page-model")]
     public class PaginationTagHelper : TagHelper
     {
-        private IUrlHelperFactory urlHelperFactory;
+        private IUrlHelperFactory _urlHelperFactory;
 
         public PaginationTagHelper(IUrlHelperFactory temp)
         {
-            urlHelperFactory = temp;
+            _urlHelperFactory = temp;
         }
 
         [ViewContext]
@@ -32,7 +32,7 @@ namespace BrickVault.Controllers.Infrastructure
         {
             if (ViewContext != null && PageModel != null) 
             {
-                IUrlHelper urlHelper = urlHelperFactory.GetUrlHelper(ViewContext);
+                IUrlHelper urlHelper = _urlHelperFactory.GetUrlHelper(ViewContext);
 
                 TagBuilder result = new TagBuilder("div");
 

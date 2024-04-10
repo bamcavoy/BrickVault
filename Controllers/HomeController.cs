@@ -29,27 +29,20 @@ public class HomeController : Controller
     
     public IActionResult Products(int pageNum)
     {
-        int pageSize = 10;
+        int pageSize = 5;
         
         var model = new ProductListViewModel
         {
-            // Products = _repo.Products
-            //     .OrderBy(x => x.Title)
-            //     .Skip((pageNum - 1) * pageSize)
-            //     .Take(pageSize),
+            Products = _repo.Products
+                .OrderBy(x => x.Name)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize),
         
-            // PaginationInfo = new PaginationInfo
-            // {
-            //     CurrentPage = pageNum,
-            //     ItemsPerPage = pageSize,
-            //     TotalItems = _repo.Products.Count()
-            // }
-            
             PaginationInfo = new PaginationInfo
             {
-                CurrentPage = 1,
-                ItemsPerPage = 5,
-                TotalItems = 37
+                CurrentPage = pageNum,
+                ItemsPerPage = pageSize,
+                TotalItems = _repo.Products.Count()
             }
         };
 
