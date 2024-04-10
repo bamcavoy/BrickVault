@@ -20,3 +20,30 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.cookie-consent-popup {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #f4f4f4;
+  color: #333;
+  padding: 10px;
+  text-align: center;
+  display: none; /* Initially hidden */
+  z-index: 1000;
+}
+
+.cookie-consent-popup a {
+  color: #007bff;
+  text-decoration: underline;
+}
+
+.cookie-consent-popup button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  margin-left: 10px;
+  cursor: pointer;
+}
