@@ -10,10 +10,6 @@ namespace BrickVault.Models;
 
 public partial class IntexDbContext : IdentityDbContext
 {
-    public IntexDbContext()
-    {
-    }
-
     public IntexDbContext(DbContextOptions<IntexDbContext> options)
         : base(options)
     {
@@ -31,8 +27,6 @@ public partial class IntexDbContext : IdentityDbContext
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseSqlServer("Server=tcp:myfreesqldbservermcavoy.database.windows.net,1433;Initial Catalog=McAvoyDB;Persist Security Info=False;User ID=blakemcavoy;Password=inteX2024;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
