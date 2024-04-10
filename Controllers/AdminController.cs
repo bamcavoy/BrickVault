@@ -26,7 +26,7 @@ public class AdminController: Controller
         //In the cshtml there should be buttons to link you to the add product.  and two buttons one to edit and one to delete.  
         return View();
     }
-
+        
     [HttpDelete]
     public void DeleteProduct()
     {
@@ -40,16 +40,20 @@ public class AdminController: Controller
         //You'll be pulling off the production_id
         return View();
     }
-
+    
+    [HttpPost]
     public IActionResult AdminEditUsers()
     {
         return View();
     }
 
-    public IActionResult AdminUserList()
+    [HttpDelete]
+    public void DeleteUser()
     {
-        return View();
+        //Delete da user.
     }
+
+    
 
     public IActionResult AdminReviewOrders()
     {
