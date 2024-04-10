@@ -56,10 +56,11 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-app.MapControllerRoute(
-    name: "paged",
-    pattern: "{controller=Home}/{action=Index}/page{pageNum:int}"
-);
+
+app.MapControllerRoute("paged", "Products/{pageNum}",
+    new { Controller = "Home", action = "Products"});
+app.MapControllerRoute("pagedwithitems", "Products/{pageNum}/{itemsPerPage}items",
+    new { Controller = "Home", action = "Products"});
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"

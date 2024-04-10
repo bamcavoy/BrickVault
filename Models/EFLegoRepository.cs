@@ -8,6 +8,7 @@ namespace BrickVault.Models
         }
 
         public IQueryable<Product> Products => _context.Products;
+        public IQueryable<Category> Categories => _context.Categories;
 
     }
 }
