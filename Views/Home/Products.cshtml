@@ -5,7 +5,7 @@
 @model ProductListViewModel
 
 <h1>Products</h1>
-
+<br/>
 <div class="container">
   <div class="row">
     <div class="col-md-3">
@@ -27,20 +27,19 @@
         @foreach (Product p in Model.Products)
         {        
           <div class="col-md-6 mb-4">
-             <div class="card">
-               <div class="card-body">
-                 <!-- Placeholder for card content -->
-                 <p class="fw-light"></p>
-                 <br/>
-                 <p class="fw-bold">@p.Name</p>
-               </div>
-             </div>
-           </div>
+            <div class="card">
+              <div class="card-body">
+                <!-- Placeholder for card content -->
+                <p class="fw-light">card content here</p>
+                <br/>
+                <p class="fw-bold">@p.Name</p>
+              </div>
+            </div>
+          </div>
         }
       </div>
+      <div page-model="@Model.PaginationInfo" page-action="Products" page-class-enabled="true" page-class="btn"
+           page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
     </div>
   </div>
 </div>
-
-<div page-model="@Model.PaginationInfo" page-action="Products" page-class-enabled="true" page-class="btn" 
-     page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>

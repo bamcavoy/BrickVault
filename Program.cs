@@ -57,11 +57,13 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "paged",
+    pattern: "{controller=Home}/{action=Index}/page{pageNum:int}"
+);
 app.MapControllerRoute(
-    name: "test",
-    pattern: "{controller=Test}/{action=Index}/{id?}");
+    name: "default",
+    pattern: "{controller=Home}/{action=Index}/{id?}"
+);
 
 app.MapRazorPages();
 
