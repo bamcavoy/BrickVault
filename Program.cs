@@ -23,6 +23,7 @@ builder.Services.AddDbContext<IntexDbContext>(options =>
     options.UseSqlServer(conString);
 });
 
+
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)

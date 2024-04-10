@@ -12,6 +12,10 @@
 <div class="container">
   <h2>Recommended Products</h2>
   <br/>
+  @foreach (Product p in ViewBag.Products)
+  {
+    <p>@p.Name</p>
+  }
   <div class="row">
     <div class="col-1"></div>
     @for (var i = 0; i < 5; i++)
