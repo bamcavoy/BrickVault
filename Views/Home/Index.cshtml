@@ -3,7 +3,6 @@
     List<Product> products = ViewBag.Products;
 }
 
-
 <div class="text-center">
     <img src="~/lib/Logo.png" style="height: 200px"></img>
     <br/> <br/>
@@ -13,6 +12,10 @@
 <div class="container">
   <h2>Recommended Products</h2>
   <br/>
+  @foreach (Product p in ViewBag.Products)
+  {
+    <p>@p.Name</p>
+  }
   <div class="row">
     <div class="col-1"></div>
     @for (var i = 0; i < 5; i++)
@@ -23,7 +26,7 @@
             <!-- Placeholder for card content -->
             <p class="fw-light">card content here</p>
             <br/>
-            <p class="fw-bold">@products[i].Name</p>
+            @* <p class="fw-bold">@products[i].Name</p> *@
           </div>
         </div>
       </div>
