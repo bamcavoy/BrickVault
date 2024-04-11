@@ -47,12 +47,6 @@ public class AdminController: Controller
         return View();
     }
 
-    [HttpDelete]
-    public void DeleteUser()
-    {
-        //Delete da user.
-    }
-
     
 
     public IActionResult AdminReviewOrders()
@@ -76,14 +70,66 @@ public class AdminController: Controller
         var users = _repository.AspNetUsers.ToList(); // Fetch the list of users
         return View(users); // Pass this list to the view
     }
-
-    public IActionResult DeleteProductConfirmation()
+    
+    public IActionResult DeleteProductConfirmation(int productId)
     {
-        throw new NotImplementedException();
+        var product = _repository.Products.FirstOrDefault(p => p.ProductId == productId);
+        if (product == null)
+        {
+            return NotFound();
+        }
+        return View(product);
     }
 
-    public IActionResult AddProduct()
+
+    [HttpPost]
+    public IActionResult DeleteProductConfirmed(int productId)
     {
-        return View();
+        Product product = null;
+        try
+        {
+            product = _repository.Products.FirstOrDefault(p => p.ProductId == productId);
+            if (product != null)
+            {
+                _repository.DeleteProduct(product);
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception or display an error message
+            ModelState.AddModelError("", "An error occurred while deleting the product.");
+
+            // Ensure that a product object is passed to the view, even if it's null
+            return View("DeleteProductConfirmation", product);
+        }
+
+        return RedirectToAction("AdminProductList");
     }
+
+
+
+
+
+    [HttpGet]
+    public IActionResult AdminAddProduct()
+    {
+        Product newProduct = new Product();
+        return View(newProduct);
+    }
+
+    [HttpPost]
+    public IActionResult AdminAddProduct(Product product)
+    {
+        if (ModelState.IsValid)
+        {
+            _repository.AddProduct(product);
+            _repository.SaveChanges();
+            // Assuming you have a Save method in your repository
+            return RedirectToAction("AdminProductList");
+        }
+        return View(product);
+    }
+
+
+   
 }

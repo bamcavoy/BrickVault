@@ -24,11 +24,11 @@
                 <td>@product.Price</td>
                 <td>@product.Year</td>
                 <td><a asp-action="AdminEditProduct" asp-route-id="@product.ProductId">Edit</a></td>
-                <td><a asp-action="DeleteProductConfirmation" asp-route-id="@product.ProductId">Delete</a></td>
+                <td><a asp-action="DeleteProductConfirmation" asp-route-productId="@product.ProductId">Delete</a></td>
             </tr>
         }
     </tbody>
 
 </table>
 
-<a href="@Url.Action("AddProduct")">Add Product</a>
+<a href="@Url.Action("AdminAddProduct")">Add Product</a>

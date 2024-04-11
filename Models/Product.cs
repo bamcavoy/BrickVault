@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BrickVault.Models;
 
 public partial class Product
 {
+    [Key]
     public byte ProductId { get; set; }
+
 
     public string Name { get; set; } = null!;
 
@@ -15,7 +19,8 @@ public partial class Product
 
     public int Price { get; set; }
 
-    public string ImgLink { get; set; } = null!;
+    [StringLength(3500, ErrorMessage = "The URL must be 3500 characters or less.")]
+    public string ImgLink { get; set; }
 
     public string PrimaryColor { get; set; } = null!;
 
