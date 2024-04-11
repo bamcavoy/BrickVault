@@ -8,9 +8,11 @@ namespace BrickVault.Controllers;
 
 public class HomeController : Controller
 {
+    private IConfiguration _configuration;
     private ILegoRepository _repo;
-    public HomeController(ILegoRepository tmp)
+    public HomeController(IConfiguration configuration, ILegoRepository tmp)
     {
+        _configuration = configuration;
         _repo = tmp;
     }
     

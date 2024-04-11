@@ -17,11 +17,14 @@ services.AddAuthentication().AddGoogle(googleOptions =>
     googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
 });
 
+
+var conString = builder.Configuration["ConnectionString:brickvaultconnection"];
+
 builder.Services.AddDbContext<IntexDbContext>(options =>
-    {
-        options.UseSqlServer(builder.Configuration["ConnectionStrings:AzureConnection"]);
-    }
-);
+{
+    options.UseSqlServer(conString);
+});
+
 
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
