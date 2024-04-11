@@ -2,7 +2,7 @@ namespace BrickVault.Models
 {
     public class EFLegoRepository : ILegoRepository
     {
-        private readonly IntexDbContext _context;
+        private IntexDbContext _context;
         public EFLegoRepository(IntexDbContext context)
         {
             _context = context;
