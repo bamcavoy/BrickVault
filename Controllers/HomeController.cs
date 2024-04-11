@@ -18,8 +18,10 @@ public class HomeController : Controller
     
     public IActionResult Index()
     {
+        List<int> topItems = [27, 33, 34, 37, 24];
+        
         ViewBag.Products = _repo.Products
-            .OrderBy(x => x.Name)
+            .Where(x => topItems.Contains(x.ProductId))
             .ToList();
         
         return View();
@@ -104,6 +106,20 @@ public class HomeController : Controller
             .FirstOrDefault(x => x.ProductId == productId);
 
         ViewBag.Product = product;
+
+        List<byte?> recommendationIds = _repo.ItemRecommendations
+            .Where(x => x.ProductId == productId)
+            .Select(x => new List<byte?> { x.Recommendation1, x.Recommendation2, x.Recommendation3, x.Recommendation4, x.Recommendation5 })
+            .ToList()
+            .SelectMany(x => x)
+            .ToList();
+
+
+        List<Product> recommendationProducts = _repo.Products
+            .Where(x => recommendationIds.Contains(x.ProductId))
+            .ToList();
+
+        ViewBag.Recommendations = recommendationProducts;
         
         return View();
     }

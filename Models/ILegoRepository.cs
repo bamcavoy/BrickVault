@@ -6,6 +6,7 @@ namespace BrickVault.Models
         public IQueryable<Category> Categories { get; }
         public  IQueryable<Customer> Customers { get; }
         public  IQueryable<AspNetUser> AspNetUsers { get;  }
+        public IQueryable<ItemRecommendation> ItemRecommendations { get; }
         
         
         
