@@ -1,6 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BrickVault", "BrickVault.csproj", "{B7874825-B7BA-461E-A6D5-D667B1DF1507}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34408.163
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BrickVault", "BrickVault.csproj", "{B7874825-B7BA-461E-A6D5-D667B1DF1507}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,5 +15,11 @@ Global
 		{B7874825-B7BA-461E-A6D5-D667B1DF1507}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B7874825-B7BA-461E-A6D5-D667B1DF1507}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B7874825-B7BA-461E-A6D5-D667B1DF1507}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A5F187BF-F435-40A1-9D9B-C513811B6221}
 	EndGlobalSection
 EndGlobal

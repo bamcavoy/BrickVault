@@ -75,9 +75,9 @@ public class HomeController : Controller
                 .OrderBy(x => x.CategoryName),
         
             Colors = allColors,
-            SelectedCategories = categories,
-            SelectedColors = colors,
-            ItemsPerPage = itemsPerPage
+            //SelectedCategories = categories,
+            //SelectedColors = colors,
+            //ItemsPerPage = itemsPerPage
         };
 
         return View(model);

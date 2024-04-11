@@ -26,6 +26,14 @@ builder.Services.AddDbContext<IntexDbContext>(options =>
 
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
+// add session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
+// session cart requires that we pass in sp
+builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     // .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<IntexDbContext>();
@@ -106,6 +114,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 
