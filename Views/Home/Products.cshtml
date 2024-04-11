@@ -89,19 +89,35 @@
                     foreach (Product p in Model.Products)
                     {
                         i++;
-                        <div class="col-2">
+                        <div class="col w-20" style="max-width: 217px">
                             <div class="card">
-                                <div class="card-body">
-                                    <!-- Placeholder for card content -->
-                                    <p class="fw-light">card content here</p>
-                                    <br/>
-                                    <p class="fw-bold">@p.Name</p>
-                                </div>
+                              <div class="card-body" style="cursor: pointer;" onclick="redirectToProductDetails('@p.ProductId')">
+                                  <div class="text-center">
+                                      <img src="@p.ImgLink" class="img-fluid" style="max-height: 115px; max-width: 100%" />
+                                  </div>
+                                  <br />
+                                  <br />
+                                  <p class="fw-bold">@p.Name</p>
+                                  <form id="@p.ProductId" method="post" asp-page="/Cart">
+                                      <div class="row align-items-center">
+                                          <div class="fw-light col-4" style="font-size:15px">
+                                              $@p.Price
+                                          </div>
+                                          <input type="hidden" name="Quantity" value=1>
+                                          <input type="hidden" name="ProductId" value="@p.ProductId"/>
+                                          <input type="hidden" name="Price" value="@p.Price"/>
+                                          <div class="col-8">
+                                              <button type="submit" class="btn btn-success btn-sm w-100">Add to Cart</button>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </div>
                             </div>
                         </div>
                         @if (i % 5 == 0)
                         {
                             @:</div><div class="row">
+                            <p></p>
                         }
                     }
                 }

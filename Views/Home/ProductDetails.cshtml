@@ -1,0 +1,134 @@
+@{
+    ViewData["Title"] = "Product Details";
+    Product product = ViewBag.Product;
+    List<Product> recommendations = ViewBag.Recommendations;
+}
+
+<div class="row">
+    <div class="col-8">
+        <h1>@product.Name</h1>
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-1"></div>
+    <div class="col-10 d-flex justify-content-center">
+        <img src="@product.ImgLink" style="max-height: 500px; max-width: 100%;"/>
+    </div>
+    <div class="col-1"></div>
+</div>
+<br/>
+<br/>
+<div class="row">
+    <div class="col-8">
+        <div class="card">
+            <div class="p-2 m-2">
+                <div class="fw-bold">Description:</div>
+                <br/>
+                <p>@product.Description</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-4">
+        <div class="row">
+            <div class="card">
+                <div class="p-2 m-2">
+                    <div class="fw-bold">Specifications:</div>
+                    <br/>
+                    <table class="table table-bordered">
+                        <tbody>
+                        <tr>
+                            <th># Parts</th>
+                            <td>@product.NumParts</td>
+                        </tr>
+                        <tr>
+                            <th>Year</th>
+                            <td>@product.Year</td>
+                        </tr>
+                        <tr>
+                            <th>Primary Color</th>
+                            <td>@product.PrimaryColor</td>
+                        </tr>
+                        <tr>
+                            <th>Secondary Color</th>
+                            <td>@product.SecondaryColor</td>
+                        </tr>
+                        @* <tr> *@
+                        @*     <th>Categories</th> *@
+                        @*     <td> *@
+                        @*         @foreach(var productCategory in product.ProductCategories) *@
+                        @*         { *@
+                        @*             <span>@productCategory.Category.CategoryName</span> *@
+                        @*             @if(productCategory != product.ProductCategories.Last()) *@
+                        @*             { *@
+                        @*                 <span>, </span> *@
+                        @*             } *@
+                        @*         } *@
+                        @*     </td> *@
+                        @* </tr> *@
+                        <tr>
+                            <th>Avg. Rating</th>
+                            <td>@product.AvgRating / 5</td>
+                        </tr>
+                        <tr>
+                            <th>Price</th>
+                            <td>$@product.Price</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>    
+        </div>             
+        <br/> 
+        <form id="@product.ProductId" method="post" asp-page="/Cart">
+            <div class="row">
+                <div class="col-4">
+                    <input type="number" class="form-control" name="Quantity" placeholder="Quantity">
+                    <input type="hidden" name="ProductId" value="@product.ProductId"/>
+                    <input type="hidden" name="Price" value="@product.Price"/>
+                </div>
+                <div class="col-8">
+                    <button type="submit" class="btn btn-success" style="width: 100%;">Add to Cart</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<br/>
+<br/>
+
+<h2>Customers that liked this item also liked:</h2>
+<br/>
+<div class="row">
+<div class="col-1"></div>
+
+@foreach (Product p in recommendations)
+{
+    <div class="col-2 mb-4">
+        <div class="card">
+            <div class="card-body" style="cursor: pointer;" onclick="redirectToProductDetails('@p.ProductId')">
+                <div class="text-center">
+                    <img src="@p.ImgLink" class="img-fluid" style="max-height: 115px; max-width: 100%" />
+                </div>
+                <br />
+                <br />
+                <p class="fw-bold">@p.Name</p>
+                <form id="@p.ProductId" method="post" asp-page="/Cart">
+                    <div class="row">
+                        <div class="fw-light col-4" style="font-size:15px">$@p.Price</div>
+                        <input type="hidden" name="Quantity" value=1>
+                        <input type="hidden" name="ProductId" value="@p.ProductId"/>
+                        <input type="hidden" name="Price" value="@p.Price"/>
+                        <div class="col-8">
+                            <button type="submit" class="btn btn-success btn-sm" style="width: 100%;">Add to Cart</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+<div class="col-1"></div>
+</div>
+
+

@@ -13,6 +13,9 @@ namespace BrickVault.Models
 
         public IQueryable<Product> Products => _context.Products;
         public IQueryable<Category> Categories => _context.Categories;
+
+        public IQueryable<ItemRecommendation> ItemRecommendations => _context.ItemRecommendations;
+        
         public IQueryable<Customer> Customers { get; }
 
         public void ReseedProductId()
