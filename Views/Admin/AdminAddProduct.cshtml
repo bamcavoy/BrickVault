@@ -1,33 +1,44 @@
-@model dynamic
+@model BrickVault.Models.Product
 
-@{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
-}
-
-<body>
-<table>
-    <thead>Products that we currently offer</thead>
-    <td>Name</td>
-    <td>Price</td>
-    <td>Year</td>
-    <td>Description</td>
-    <td>Category</td>
-    <td>Edit</td>
-    <td>Delete</td>
-</table>
-
-<table>
-    <tr>product.Name</tr>
-    <tr>product.Price</tr>
-    <tr>product.Year</tr>
-    <tr>product.Descriptionr</tr>
-    <tr>product.Category</tr>
-    <tr>Edit</tr>  //Button that will link to the edit product page.  
-    <tr>Delete</tr> //Button that will link to the delete confirmation page where if the user selects yes the product will delete.  
-    
-    
-    
-</table>
-
-</body>
+<form asp-action="AdminAddProduct" method="post" enctype="multipart/form-data">
+    <div>
+        
+    </div>
+    <div>
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Year">Year</label>
+        <input asp-for="Year" />
+    </div>
+    <div>
+        <label asp-for="NumParts">Number of Parts</label>
+        <input asp-for="NumParts" />
+    </div>
+    <div>
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" />
+    </div>
+    <div>
+        <label asp-for="ImgLink">Image Link</label>
+        <input asp-for="ImgLink" />
+    </div>
+    <div>
+        <label asp-for="PrimaryColor">Primary Color</label>
+        <input asp-for="PrimaryColor" />
+    </div>
+    <div>
+        <label asp-for="SecondaryColor">Secondary Color</label>
+        <input asp-for="SecondaryColor" />
+    </div>
+    <div>
+        <label asp-for="Description">Description</label>
+        <textarea asp-for="Description"></textarea>
+    </div>
+    <div>
+        <label asp-for="AvgRating">Average Rating</label>
+        <input asp-for="AvgRating" />
+    </div>
+    <button type="submit">Add Product</button>
+</form>

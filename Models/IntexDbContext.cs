@@ -232,13 +232,17 @@ public partial class IntexDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.Property(e => e.ProductId).HasColumnName("product_ID");
+            entity.HasKey(e => e.ProductId); // Ensure that ProductId is the primary key
+            entity.Property(e => e.ProductId)
+                .HasColumnName("product_ID")
+                .ValueGeneratedOnAdd(); // Configure ProductId as an identity column
+
             entity.Property(e => e.AvgRating).HasColumnName("avg_rating");
             entity.Property(e => e.Description)
                 .HasMaxLength(2750)
                 .HasColumnName("description");
             entity.Property(e => e.ImgLink)
-                .HasMaxLength(150)
+                .HasMaxLength(3500)
                 .HasColumnName("img_link");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
@@ -253,6 +257,7 @@ public partial class IntexDbContext : DbContext
                 .HasColumnName("secondary_color");
             entity.Property(e => e.Year).HasColumnName("year");
         });
+
 
         modelBuilder.Entity<ProductCategory>(entity =>
         {
