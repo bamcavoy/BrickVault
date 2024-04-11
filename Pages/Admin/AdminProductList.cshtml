@@ -1,13 +1,24 @@
 @model IEnumerable<BrickVault.Models.Product>
 
-<table>
+
+<br/>
+<div class="row">
+    <div class="col-10">
+        <h1>Products</h1>
+    </div>
+    <div class="col-2">
+        <a class="float-end btn btn-secondary" href="@Url.Action("AdminAddProduct")">Add Product</a>
+    </div>
+</div>
+
+<br/>
+<table class="table table-bordered">
     <thead>
     <tr>
         <th>Image</th>
         <th>Name</th>
         <th>Year</th>
         <th>Price</th>
-        <th>Image</th>
         <!-- Add more columns as needed -->
         <th>Edit</th>
         <th>Delete</th>
@@ -17,18 +28,20 @@
         @foreach (var product in Model)
         {
             <tr>
-                <td style="width: 400px; height: 300px;">
-                    <img src="@product.ImgLink" alt="Product Image" style="width: 100%; height: 100%; object-fit: cover;" />
+                <td class="d-flex justify-content-center align-items-center" style="height: 120px;">
+                    <img src="@product.ImgLink" alt="Product Image" style="height:100px;" />
                 </td>
                 <td>@product.Name</td>
-                <td>@product.Price</td>
                 <td>@product.Year</td>
-                <td><a asp-action="AdminEditProduct" asp-route-id="@product.ProductId">Edit</a></td>
-                <td><a asp-action="DeleteProductConfirmation" asp-route-productId="@product.ProductId">Delete</a></td>
+                <td>$@product.Price</td>
+                <td>
+                    <a class="btn btn-primary" asp-action="AdminEditProduct" asp-route-id="@product.ProductId">Edit</a>
+                </td>
+                <td>
+                    <a class="btn btn-danger" asp-action="DeleteProductConfirmation" asp-route-productId="@product.ProductId">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 
 </table>
-
-<a href="@Url.Action("AdminAddProduct")">Add Product</a>

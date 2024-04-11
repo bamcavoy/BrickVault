@@ -94,12 +94,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    
-    public IActionResult Cart()
-    {
-        return View();
-    }
-    
+
     public IActionResult ProductDetails(int productId)
     {
         Product product = _repo.Products
