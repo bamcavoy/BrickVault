@@ -5,79 +5,92 @@
 @model ProductListViewModel
 
 <div class="container">
-        <div class="row">
-            <div class="col-8">
-                <h1>Products</h1>
+    <div class="row">
+        <div class="col-8">
+            <h1>Products</h1>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Filter Column -->
+        <div class="card col-2">
+            <div class="card-header">
+                Filters
             </div>
-            <div class="row">
-            <div class="col-2">
-                <!-- Filter Column -->
-                <div class="card">
-                    <div class="card-header">
-                        Filters
+            <div class="card-body">
+                <form asp-controller="Home" asp-action="Products" method="get">
+                    <div class="form-group">
+                        <label for="itemsPerPage">Items Per Page:</label>
+                        <select class="form-control" id="itemsPerPage" name="itemsPerPage">
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="20">20</option>
+                        </select>
                     </div>
-                    <div class="card-body">
-                        <form asp-controller="Home" asp-action="Products" method="get">
-                            <div class="form-group">
-                                <label for="itemsPerPage">Items Per Page:</label>
-                                <select class="form-control" id="itemsPerPage" name="itemsPerPage">
-                                    <option value="5">5</option>
-                                    <option value="10">10</option>
-                                    <option value="20">20</option>
-                                </select>
-                                <br/>
-                                <label for="category">Category:</label>
-                                <select class="form-control" id="category" name="category" multiple>
-                                    @foreach (Category c in Model.Categories)
-                                    {
-                                        <option value="@c.CategoryId">@c.CategoryName</option>
-                                    }
-                                </select>
-                                <br/>
-                                <label for="color">Color:</label>
-                                <select class="form-control" id="color" name="color" multiple>
-                                    @foreach (string c in Model.Colors)
-                                    {
-                                        <option value="c">@c</option>
-                                    }
-                                </select>
+                    <br/>
+                    
+                    <label>Category:</label>
+                    <div style="height: 200px; overflow-y: auto;" class="form-control">
+                        @foreach (Category c in Model.Categories)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="categories" id="category_@c.CategoryId" value="@c.CategoryId">
+                                <label class="form-check-label" for="category_@c.CategoryId">
+                                    @c.CategoryName
+                                </label>
                             </div>
-                            <br/>
-                            <button type="submit" class="btn btn-primary">Apply</button>
-                        </form>
+                        }
                     </div>
-                </div>
+                    <br/>
+
+                    <label>Color:</label>
+                    <div style="height: 200px; overflow-y: auto;" class="form-control">
+                        @foreach (string c in Model.Colors)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" name="colors" id="color_@c" value="@c">
+                                <label class="form-check-label" for="color_@c">
+                                    @c
+                                </label>
+                            </div>
+                        }
+                    </div>
+                    <br/>
+                    <button type="submit" class="btn btn-primary">Apply</button>
+                </form>
+            </div>
+        </div>
+        <br/><br/>
+
+        <!-- Product Cards -->
+        <div class="col-10">
+            <div class="row">
+                @{
+                    int i = 0;
+                    foreach (Product p in Model.Products)
+                    {
+                        i++;
+                        <div class="col-2">
+                            <div class="card">
+                                <div class="card-body">
+                                    <!-- Placeholder for card content -->
+                                    <p class="fw-light">card content here</p>
+                                    <br/>
+                                    <p class="fw-bold">@p.Name</p>
+                                </div>
+                            </div>
+                        </div>
+                        @if (i % 5 == 0)
+                        {
+                            @:</div><div class="row">
+                        }
+                    }
+                }
             </div>
         </div>
     </div>
-    <br/><br/>
-  
-    <div class="row">
-        <div class="col-1"></div>
-        @{
-            int i = 0;
-            foreach (Product p in Model.Products)
-            {
-                i++;
-                <div class="col-2">
-                    <div class="card">
-                        <div class="card-body">
-                            <!-- Placeholder for card content -->
-                            <p class="fw-light">card content here</p>
-                            <br/>
-                            <p class="fw-bold">@p.Name</p>
-                        </div>
-                    </div>
-                </div>
-                if (i % 5 == 0)
-                {
-                    <br/>
-                }
-            }
-        }
-        <div class="col-1"></div>
-    </div>
-    <br/>
 </div>
+
+<br/>
 <div page-model="@Model.PaginationInfo" page-action="Products" page-class-enabled="true" page-class="btn"
      page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
