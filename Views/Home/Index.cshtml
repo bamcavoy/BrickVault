@@ -6,42 +6,49 @@
 <div class="text-center">
     <img src="~/lib/Logo.png" style="height: 200px"></img>
     <br/> <br/>
-    <a href="@Url.Action("Products", "Home")" class="btn btn-secondary">Browse Products</a>
 </div>
 <br/><br/>
 <div class="container">
-  <h2>Recommended Products</h2>
-  <br/>
-  <div class="row">
-    <div class="col-1"></div>
-@foreach (Product p in products)
-{
-    <div class="col-2 mb-4">
-        <div class="card" style="cursor: pointer;" onclick="redirectToProductDetails('@p.ProductId')">
-            <div class="card-body">
-                <div class="text-center">
-                    <img src="@p.ImgLink" class="img-fluid" style="max-height: 115px; max-width: 100%" />
-                </div>
-                <br />
-                <br />
-                <p class="fw-bold">@p.Name</p>
-                <form id="@p.ProductId" method="post" asp-page="/Cart">
-                    <div class="row align-items-center">
-                        <div class="fw-light col-4" style="font-size:15px">$@p.Price</div>
-                        <input type="hidden" name="Quantity" value=1>
-                        <input type="hidden" name="ProductId" value="@p.ProductId"/>
-                        <input type="hidden" name="Price" value="@p.Price"/>
-                        <div class="col-8">
-                            <button type="submit" class="btn btn-success btn-sm" style="width: 100%;">Add to Cart</button>
+    <h2>Recommended Products</h2>
+    <br/>
+    <div class="row">
+        <div class="col-1"></div>
+        @foreach (Product p in products)
+        {
+            <div class="col-2 mb-4">
+                <div class="card" style="cursor: pointer;" onclick="redirectToProductDetails('@p.ProductId')">
+                    <div class="card-body">
+                        <div class="text-center">
+                            <img src="@p.ImgLink" class="img-fluid" style="max-height: 115px; max-width: 100%" />
                         </div>
+                        <br />
+                        <br />
+                        <p class="fw-bold">@p.Name</p>
+                        <form id="@p.ProductId" method="post" asp-page="/Cart">
+                            <div class="row align-items-center">
+                                <div class="fw-light col-4" style="font-size:15px">$@p.Price</div>
+                                <input type="hidden" name="Quantity" value=1>
+                                <input type="hidden" name="ProductId" value="@p.ProductId"/>
+                                <input type="hidden" name="Price" value="@p.Price"/>
+                                <div class="col-8">
+                                    <button type="submit" class="btn btn-success btn-sm" style="width: 100%;">Add to Cart</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
+        }
+        <div class="col-1"></div>
+    </div>
+</div>
+<br/><br/>
+<div>
+    <div class="text-center">
+        <div class="col-12">
+            <a href="@Url.Action("Products", "Home")" class="btn btn-secondary">All Products</a>
         </div>
     </div>
-}
-    <div class="col-1"></div>
-  </div>
 </div>
     <br/><br/><br/>
     <a asp-controller="Home" asp-action="ReviewOrders" class="btn btn-primary me-2">Review Orders</a>

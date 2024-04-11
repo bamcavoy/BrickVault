@@ -27,7 +27,16 @@ builder.Services.AddDbContext<IntexDbContext>(options =>
 
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+
+// add session
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession();
+
+// session cart requires that we pass in sp
+builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<IntexDbContext>();
 
@@ -79,6 +88,12 @@ builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES U
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
 });
 
+builder.Services.AddDbContext<IntexDbContext>(options =>
+{
+    options.UseSqlServer(conString);
+});
+
+
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
@@ -102,6 +117,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
+app.UseSession();
 
 app.UseRouting();
 
