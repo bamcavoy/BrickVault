@@ -4,5 +4,6 @@ namespace BrickVault.Models
     {
         public IQueryable<Product> Products { get; }
         public IQueryable<Category> Categories { get; }
+        //public IQueryable<Order> Orders { get; }
     }
 }

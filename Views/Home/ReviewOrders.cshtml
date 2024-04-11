@@ -5,6 +5,34 @@
 
 <h1>Review Orders</h1>
 <br/>
+
+@* <table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Transaction ID</th>
+            <th>Country of Transaction</th>
+            <th>Total</th>
+            <th>Order Date</th>
+            <th>Fraudulent</th>
+            <th class="prediction-cell">Fraud Prediction</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Orders.TransactionID</td>
+                <td>@item.Orders.CountryOfTransaction</td>
+                <td>@item.Orders.Amount</td>
+                <td>@item.Orders.Date</td>
+                <td>@item.Orders.Fraud</td>
+                <td class="prediction-cell">@item.Prediction</td>
+            </tr>
+        }
+    </tbody>
+</table> *@
+
+
 <div class="container align-content-center col-10">
     <table class="table table-hover">
         <thead class="dark">
