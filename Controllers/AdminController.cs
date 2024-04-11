@@ -109,6 +109,7 @@ public class AdminController : Controller
     }
 
     [Authorize(Roles = "Admin")]
+
     public IActionResult DeleteProductConfirmation(int productId)
     {
         var product = _repository.Products.FirstOrDefault(p => p.ProductId == productId);

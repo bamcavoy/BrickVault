@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrickVault.Controllers;
@@ -24,6 +25,11 @@ public class HomeController : Controller
             .Where(x => topItems.Contains(x.ProductId))
             .ToList();
         
+        return View();
+    }
+
+    public IActionResult Cart()
+    {
         return View();
     }
 
@@ -89,7 +95,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    
+    [Authorize(Roles = "Customer")] // giving an access denied because user needs to be assigned to a member. need to figure out how i can better manage this
     public IActionResult ReviewOrders()
     {
         return View();
