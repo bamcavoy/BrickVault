@@ -23,7 +23,7 @@ namespace BrickVault.Pages
             //Cart = HttpContext.Session.GetJson<Cart>("cart") ?? new Cart();
         }
 
-        public IActionResult OnPost(int productId, int quantity, int price)
+        public IActionResult OnPost(int productId, int quantity, int price, string returnUrl)
         {
             Product prod = _repo.Products
 
@@ -34,7 +34,7 @@ namespace BrickVault.Pages
                 Cart.AddItem(prod, quantity, price);
             }
             // pass in the redirect url
-            return RedirectToPage();
+            return RedirectToPage(new { returnUrl = returnUrl });
 
         }
 
