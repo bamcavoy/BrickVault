@@ -1,0 +1,15 @@
+@model BrickVault.Models.Product
+
+@{
+    ViewBag.Title = "Delete Confirmation";
+    Layout = "_Layout";
+}
+
+<h2>Are you sure you want to delete @Model.Name? You won't be able to undo your changes once you do so.</h2>
+
+<form asp-action="DeleteProductConfirmed" method="post">
+    <input type="hidden" name="productId" value="@Model.ProductId" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="AdminProductList" class="btn btn-secondary">Cancel</a>
+</form>
+
