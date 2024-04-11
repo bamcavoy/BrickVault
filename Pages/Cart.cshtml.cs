@@ -1,15 +1,16 @@
 using BrickVault.Controllers.Infrastructure;
 using BrickVault.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BrickVault.Pages
 {
+    [Authorize(Roles = "Customer")]
     public class CartModel : PageModel
     {
         private ILegoRepository _repo;
-
         public Cart Cart { get; set; }
         public CartModel(ILegoRepository temp, Cart cartService)
         {
