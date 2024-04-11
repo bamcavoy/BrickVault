@@ -26,8 +26,8 @@ builder.Services.AddDbContext<IntexDbContext>(options =>
 
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    // .AddRoles<IdentityRole>()
+builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<IntexDbContext>();
 
 builder.Services.AddControllersWithViews();
@@ -69,7 +69,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 // Add services to the container.
 builder.Services.AddDistributedMemoryCache(); // Required to enable session state
 
-builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM SESSION HIJACKING 
+builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM MIDDLE MAN SESSION HIJACKING 
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
     options.Cookie.HttpOnly = true; // Enhance security by preventing access to the cookie via JavaScript
@@ -114,18 +114,38 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var roleManager = 
-//         scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-//
-//     var roles = new[] { "Admin", "Manager", "Member" };
-//     foreach (var role in roles )
-//     {
-//         if (!await roleManager.RoleExistsAsync(role))
-//             await roleManager.CreateAsync(new IdentityRole(role));
-//     }
-//
-//
-// }
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = 
+        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var roles = new[] { "Admin", "Customer" }; // assigns roles
+    foreach (var role in roles )
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = 
+        scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    string email = "admin@admin.com";
+    string password = "Test12345!";
+
+    if (await userManager.FindByEmailAsync(email) == null) // creates values for if a user doesn't have an admin account
+    {
+        var user = new IdentityUser();
+        user.UserName = email;
+        user.Email = email;
+
+        await userManager.CreateAsync(user, password);
+
+        await userManager.AddToRoleAsync(user, "Admin");
+    }
+}
 app.Run();
