@@ -1,23 +1,37 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.General;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using IdentityDbContext = Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityDbContext;
-
 
 namespace BrickVault.Models;
 
-public partial class IntexDbContext : IdentityDbContext
+public partial class IntexDbContext : DbContext
 {
+    public IntexDbContext()
+    {
+    }
+
     public IntexDbContext(DbContextOptions<IntexDbContext> options)
         : base(options)
     {
     }
 
+    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+
+    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
+
+    public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
+
+    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
+
+    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+
+    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
+
     public virtual DbSet<Category> Categories { get; set; }
 
     public virtual DbSet<Customer> Customers { get; set; }
+
+    public virtual DbSet<ItemRecommendation> ItemRecommendations { get; set; }
 
     public virtual DbSet<LineItem> LineItems { get; set; }
 
@@ -27,15 +41,89 @@ public partial class IntexDbContext : IdentityDbContext
 
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
+    public virtual DbSet<UserRecommendation> UserRecommendations { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Server=tcp:myfreesqldbservermcavoy.database.windows.net,1433;Initial Catalog=McAvoyDB;Persist Security Info=False;User ID=blakemcavoy;Password=inteX2024;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
+        modelBuilder.Entity<AspNetRole>(entity =>
+        {
+            entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedName] IS NOT NULL)");
+
+            entity.Property(e => e.Name).HasMaxLength(256);
+            entity.Property(e => e.NormalizedName).HasMaxLength(256);
+        });
+
+        modelBuilder.Entity<AspNetRoleClaim>(entity =>
+        {
+            entity.HasIndex(e => e.RoleId, "IX_AspNetRoleClaims_RoleId");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.AspNetRoleClaims).HasForeignKey(d => d.RoleId);
+        });
+
+        modelBuilder.Entity<AspNetUser>(entity =>
+        {
+            entity.HasIndex(e => e.NormalizedEmail, "EmailIndex");
+
+            entity.HasIndex(e => e.NormalizedUserName, "UserNameIndex")
+                .IsUnique()
+                .HasFilter("([NormalizedUserName] IS NOT NULL)");
+
+            entity.Property(e => e.Email).HasMaxLength(256);
+            entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
+            entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
+            entity.Property(e => e.UserName).HasMaxLength(256);
+
+            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+                .UsingEntity<Dictionary<string, object>>(
+                    "AspNetUserRole",
+                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
+                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
+                    j =>
+                    {
+                        j.HasKey("UserId", "RoleId");
+                        j.ToTable("AspNetUserRoles");
+                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
+                    });
+        });
+
+        modelBuilder.Entity<AspNetUserClaim>(entity =>
+        {
+            entity.HasIndex(e => e.UserId, "IX_AspNetUserClaims_UserId");
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserClaims).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<AspNetUserLogin>(entity =>
+        {
+            entity.HasKey(e => new { e.LoginProvider, e.ProviderKey });
+
+            entity.HasIndex(e => e.UserId, "IX_AspNetUserLogins_UserId");
+
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.ProviderKey).HasMaxLength(128);
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserLogins).HasForeignKey(d => d.UserId);
+        });
+
+        modelBuilder.Entity<AspNetUserToken>(entity =>
+        {
+            entity.HasKey(e => new { e.UserId, e.LoginProvider, e.Name });
+
+            entity.Property(e => e.LoginProvider).HasMaxLength(128);
+            entity.Property(e => e.Name).HasMaxLength(128);
+
+            entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
+        });
+
         modelBuilder.Entity<Category>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("Category");
+            entity.ToTable("Category");
 
             entity.Property(e => e.CategoryId).HasColumnName("category_ID");
             entity.Property(e => e.CategoryName)
@@ -54,7 +142,7 @@ public partial class IntexDbContext : IdentityDbContext
                 .HasMaxLength(50)
                 .HasColumnName("country_of_residence");
             entity.Property(e => e.Email)
-                .HasMaxLength(1)
+                .HasMaxLength(50)
                 .HasColumnName("email");
             entity.Property(e => e.FirstName)
                 .HasMaxLength(50)
@@ -67,6 +155,26 @@ public partial class IntexDbContext : IdentityDbContext
                 .HasColumnName("last_name");
         });
 
+        modelBuilder.Entity<ItemRecommendation>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .HasColumnName("name");
+            entity.Property(e => e.ProductId).HasColumnName("product_ID");
+            entity.Property(e => e.Recommendation1).HasColumnName("recommendation_1");
+            entity.Property(e => e.Recommendation2).HasColumnName("recommendation_2");
+            entity.Property(e => e.Recommendation3).HasColumnName("recommendation_3");
+            entity.Property(e => e.Recommendation4).HasColumnName("recommendation_4");
+            entity.Property(e => e.Recommendation5).HasColumnName("recommendation_5");
+
+            entity.HasOne(d => d.Product).WithMany()
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ItemRecommendations_Products");
+        });
+
         modelBuilder.Entity<LineItem>(entity =>
         {
             entity.HasNoKey();
@@ -75,12 +183,25 @@ public partial class IntexDbContext : IdentityDbContext
             entity.Property(e => e.Qty).HasColumnName("qty");
             entity.Property(e => e.Rating).HasColumnName("rating");
             entity.Property(e => e.TransactionId).HasColumnName("transaction_ID");
+
+            entity.HasOne(d => d.Product).WithMany()
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LineItems_Products");
+
+            entity.HasOne(d => d.Transaction).WithMany()
+                .HasForeignKey(d => d.TransactionId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_LineItems_Orders");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasNoKey();
+            entity.HasKey(e => e.TransactionId);
 
+            entity.Property(e => e.TransactionId)
+                .ValueGeneratedNever()
+                .HasColumnName("transaction_ID");
             entity.Property(e => e.Amount).HasColumnName("amount");
             entity.Property(e => e.Bank)
                 .HasMaxLength(50)
@@ -101,7 +222,6 @@ public partial class IntexDbContext : IdentityDbContext
                 .HasMaxLength(50)
                 .HasColumnName("shipping_address");
             entity.Property(e => e.Time).HasColumnName("time");
-            entity.Property(e => e.TransactionId).HasColumnName("transaction_ID");
             entity.Property(e => e.TypeOfCard)
                 .HasMaxLength(50)
                 .HasColumnName("type_of_card");
@@ -142,6 +262,36 @@ public partial class IntexDbContext : IdentityDbContext
 
             entity.Property(e => e.CategoryId).HasColumnName("category_ID");
             entity.Property(e => e.ProductId).HasColumnName("product_ID");
+
+            entity.HasOne(d => d.Category).WithMany()
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Product-Category_Category");
+
+            entity.HasOne(d => d.Product).WithMany()
+                .HasForeignKey(d => d.ProductId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Product-Category_Products");
+        });
+
+        modelBuilder.Entity<UserRecommendation>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.CustomerId).HasColumnName("customer_ID");
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .HasColumnName("name");
+            entity.Property(e => e.Recommendation1).HasColumnName("recommendation_1");
+            entity.Property(e => e.Recommendation2).HasColumnName("recommendation_2");
+            entity.Property(e => e.Recommendation3).HasColumnName("recommendation_3");
+            entity.Property(e => e.Recommendation4).HasColumnName("recommendation_4");
+            entity.Property(e => e.Recommendation5).HasColumnName("recommendation_5");
+
+            entity.HasOne(d => d.Customer).WithMany()
+                .HasForeignKey(d => d.CustomerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserRecommendations_Customers");
         });
 
         OnModelCreatingPartial(modelBuilder);

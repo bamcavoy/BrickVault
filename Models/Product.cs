@@ -11,9 +11,9 @@ public partial class Product
 
     public short Year { get; set; }
 
-    public short NumParts { get; set; }
+    public int NumParts { get; set; }
 
-    public short Price { get; set; }
+    public int Price { get; set; }
 
     public string ImgLink { get; set; } = null!;
 

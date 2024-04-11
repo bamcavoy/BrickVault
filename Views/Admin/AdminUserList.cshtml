@@ -1,8 +1,36 @@
-@model dynamic
+@model List<BrickVault.Models.AspNetUser>
 
 @{
-    ViewBag.Title = "title";
-    Layout = "_Layout";
+    ViewBag.Title = "User List";
+    Layout = "_Layout"; // Assuming _Layout.cshtml is the layout file you want to use
 }
 
-<h2>title</h2>
+<h2>@ViewBag.Title</h2>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Email Confirmed</th>
+        <th>Phone Number</th>
+        <!-- Add more headers as needed -->
+    </tr>
+    </thead>
+    
+    <tbody>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>@user.Id</td>
+            <td>@user.UserName</td>
+            <td>@user.Email</td>
+            <td>@user.EmailConfirmed</td>
+            <td>@user.PhoneNumber</td>
+            <!-- Add more data cells as needed -->
+        </tr>
+    }
+
+    </tbody>
+</table>

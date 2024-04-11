@@ -7,11 +7,18 @@ namespace BrickVault.Controllers;
 
 public class AdminController: Controller
 {
-    [HttpPost]
-    public IActionResult AdminAddProduct()
+    private readonly ILegoRepository _repository;
+
+    public AdminController(ILegoRepository repository)
     {
-        //This will essentially be a form for admins that will pass the necessary data to the joinning table.  
-        return View();
+        _repository = repository;
+    }
+    
+    [HttpGet]
+    public IActionResult AdminProductList()
+    {
+        var products = _repository.Products.ToList();
+        return View(products);
     }
 
     public IActionResult AdminDashboard()
@@ -19,13 +26,6 @@ public class AdminController: Controller
         return View();
     }
     
-    [HttpGet]
-    public IActionResult AdminProductList()
-    {
-        //This method will gather all of the current products in our db by extracting the product_id.  
-        //In the cshtml there should be buttons to link you to the add product.  and two buttons one to edit and one to delete.  
-        return View();
-    }
         
     [HttpDelete]
     public void DeleteProduct()
@@ -69,5 +69,21 @@ public class AdminController: Controller
     public void AdminSwitchBetweenViews()
     {
         //MakeDaFunction
+    }
+
+    public IActionResult AdminUserList()
+    {
+        var users = _repository.AspNetUsers.ToList(); // Fetch the list of users
+        return View(users); // Pass this list to the view
+    }
+
+    public IActionResult DeleteProductConfirmation()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IActionResult AddProduct()
+    {
+        return View();
     }
 }

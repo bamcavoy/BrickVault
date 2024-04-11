@@ -12,13 +12,9 @@
 <div class="container">
   <h2>Recommended Products</h2>
   <br/>
-  @foreach (Product p in ViewBag.Products)
-  {
-    <p>@p.Name</p>
-  }
   <div class="row">
     <div class="col-1"></div>
-    @for (var i = 0; i < products.Count; i++)
+    @for (var i = 0; i < 5; i++)
     {
       <div class="col-2 mb-4">
         <div class="card">
@@ -26,7 +22,7 @@
             <!-- Placeholder for card content -->
             <p class="fw-light">card content here</p>
             <br/>
-            @* <p class="fw-bold">@products[i].Name</p> *@
+            <p class="fw-bold">@products[i].Name</p>
           </div>
         </div>
       </div>
@@ -36,3 +32,5 @@
 </div>
     <br/><br/><br/>
     <a asp-controller="Home" asp-action="ReviewOrders">Review Orders</a>
+    <a asp-controller="Admin" asp-action="AdminUserList">User List</a>
+    <a asp-controller="Admin" asp-action="AdminProductList">Admin Product List</a>

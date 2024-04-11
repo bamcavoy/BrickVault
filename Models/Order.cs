@@ -7,7 +7,7 @@ public partial class Order
 {
     public int TransactionId { get; set; }
 
-    public int CustomerId { get; set; }
+    public short CustomerId { get; set; }
 
     public DateOnly Date { get; set; }
 
