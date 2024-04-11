@@ -67,6 +67,17 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+// Add services to the container.
+builder.Services.AddDistributedMemoryCache(); // Required to enable session state
+
+builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM SESSION HIJACKING 
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Enhance security by preventing access to the cookie via JavaScript
+    options.Cookie.IsEssential = true; // The session cookie will not be subject to consent checks
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
+});
+
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
