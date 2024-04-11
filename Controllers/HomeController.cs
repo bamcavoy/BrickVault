@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace BrickVault.Controllers;
 
@@ -94,6 +95,16 @@ public class HomeController : Controller
     
     public IActionResult Cart()
     {
+        return View();
+    }
+    
+    public IActionResult ProductDetails(int productId)
+    {
+        Product product = _repo.Products
+            .FirstOrDefault(x => x.ProductId == productId);
+
+        ViewBag.Product = product;
+        
         return View();
     }
 }

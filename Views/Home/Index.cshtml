@@ -17,6 +17,8 @@
     @for (var i = 0; i < 5; i++)
     {
       <div class="col-2 mb-4">
+        <a asp-controller="Home" asp-action="ProductDetails" asp-route-productId="@products[i].ProductId" class="card-link"
+           style="text-decoration: none; color: inherit;">
         <div class="card">
           <div class="card-body">
             <!-- Placeholder for card content -->
@@ -25,6 +27,7 @@
             <p class="fw-bold">@products[i].Name</p>
           </div>
         </div>
+        </a>
       </div>
     }
     <div class="col-1"></div>
