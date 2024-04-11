@@ -77,6 +77,12 @@ builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES U
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
 });
 
+builder.Services.AddDbContext<IntexDbContext>(options =>
+{
+    options.UseSqlServer(conString);
+});
+
+
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
