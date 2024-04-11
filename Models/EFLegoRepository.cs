@@ -2,7 +2,7 @@ namespace BrickVault.Models
 {
     public class EFLegoRepository : ILegoRepository
     {
-        private readonly IntexDbContext _context;
+        private IntexDbContext _context;
         public EFLegoRepository(IntexDbContext context)
         {
             _context = context;
@@ -13,6 +13,9 @@ namespace BrickVault.Models
 
         public IQueryable<Product> Products => _context.Products;
         public IQueryable<Category> Categories => _context.Categories;
+
+        public IQueryable<ItemRecommendation> ItemRecommendations => _context.ItemRecommendations;
+        
         public IQueryable<Customer> Customers { get; }
 
         public void ReseedProductId()

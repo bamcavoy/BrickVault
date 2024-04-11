@@ -13,53 +13,72 @@
     
     <div class="row">
         <!-- Filter Column -->
-        <div class="card col-2">
-            <div class="card-header">
-                Filters
-            </div>
-            <div class="card-body">
-                <form asp-controller="Home" asp-action="Products" method="get">
-                    <div class="form-group">
-                        <label for="itemsPerPage">Items Per Page:</label>
-                        <select class="form-control" id="itemsPerPage" name="itemsPerPage">
-                            <option value="5">5</option>
-                            <option value="10">10</option>
-                            <option value="20">20</option>
-                        </select>
-                    </div>
-                    <br/>
-                    
-                    <label>Category:</label>
-                    <div style="height: 200px; overflow-y: auto;" class="form-control">
-                        @foreach (Category c in Model.Categories)
-                        {
+        <div class="col-2">
+            <div class="card">
+                <div class="card-header">
+                    Filters
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Home" asp-action="Products" method="get">
+                        <div class="form-group">
+                            <label for="itemsPerPage">Items Per Page:</label>
+                            <select class="form-control" id="itemsPerPage" name="itemsPerPage">
+                                <option value="5" selected="@(Model.ItemsPerPage == 5)">5</option>
+                                <option value="10" selected="@(Model.ItemsPerPage == 10)">10</option>
+                                <option value="20" selected="@(Model.ItemsPerPage == 20)">20</option>
+                            </select>
+                        </div>
+                        <br/>
+                
+                        <label>Category:</label>
+                        <div style="height: 200px; overflow-y: auto;" class="form-control">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="categories" id="category_@c.CategoryId" value="@c.CategoryId">
-                                <label class="form-check-label" for="category_@c.CategoryId">
-                                    @c.CategoryName
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="selectAllCategories" onclick="selectAll('categories')"/>
+                                <label class="form-check-label" for="selectAllCategories">-Select All-</label>
                             </div>
-                        }
-                    </div>
-                    <br/>
-
-                    <label>Color:</label>
-                    <div style="height: 200px; overflow-y: auto;" class="form-control">
-                        @foreach (string c in Model.Colors)
-                        {
+                            @foreach (Category c in Model.Categories)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="categories" id="category_@c.CategoryId" value="@c.CategoryId" @(Model.SelectedCategories != null && Model.SelectedCategories.Contains(c.CategoryId) ? "checked" : "")>
+                                    <label class="form-check-label" for="category_@c.CategoryId">
+                                        @c.CategoryName
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <br/>
+                
+                        <label>Color:</label>
+                        <div style="height: 200px; overflow-y: auto;" class="form-control">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="colors" id="color_@c" value="@c">
-                                <label class="form-check-label" for="color_@c">
-                                    @c
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="selectAllColors" onclick="selectAll('colors')"/>
+                                <label class="form-check-label" for="selectAllColors">-Select All-</label>
                             </div>
-                        }
-                    </div>
-                    <br/>
-                    <button type="submit" class="btn btn-primary">Apply</button>
-                </form>
+                            @foreach (string c in Model.Colors)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="colors" id="color_@c" value="@c" @(Model.SelectedColors != null && Model.SelectedColors.Contains(c) ? "checked" : "")>
+                                    <label class="form-check-label" for="color_@c">
+                                        @c
+                                    </label>
+                                </div>
+                            }
+                        </div>
+                        <br/>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear</button>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                            </div>
+                        </div>
+                        <input type="hidden" name="pageNum" value="1"/>
+                    </form>
+                </div>
             </div>
         </div>
+            
         <br/><br/>
 
         <!-- Product Cards -->
@@ -70,19 +89,35 @@
                     foreach (Product p in Model.Products)
                     {
                         i++;
-                        <div class="col-2">
+                        <div class="col w-20" style="max-width: 217px">
                             <div class="card">
-                                <div class="card-body">
-                                    <!-- Placeholder for card content -->
-                                    <p class="fw-light">card content here</p>
-                                    <br/>
-                                    <p class="fw-bold">@p.Name</p>
-                                </div>
+                              <div class="card-body" style="cursor: pointer;" onclick="redirectToProductDetails('@p.ProductId')">
+                                  <div class="text-center">
+                                      <img src="@p.ImgLink" class="img-fluid" style="max-height: 115px; max-width: 100%" />
+                                  </div>
+                                  <br />
+                                  <br />
+                                  <p class="fw-bold">@p.Name</p>
+                                  <form id="@p.ProductId" method="post" asp-page="/Cart">
+                                      <div class="row align-items-center">
+                                          <div class="fw-light col-4" style="font-size:15px">
+                                              $@p.Price
+                                          </div>
+                                          <input type="hidden" name="Quantity" value=1>
+                                          <input type="hidden" name="ProductId" value="@p.ProductId"/>
+                                          <input type="hidden" name="Price" value="@p.Price"/>
+                                          <div class="col-8">
+                                              <button type="submit" class="btn btn-success btn-sm w-100">Add to Cart</button>
+                                          </div>
+                                      </div>
+                                  </form>
+                              </div>
                             </div>
                         </div>
                         @if (i % 5 == 0)
                         {
                             @:</div><div class="row">
+                            <p></p>
                         }
                     }
                 }
@@ -93,4 +128,33 @@
 
 <br/>
 <div page-model="@Model.PaginationInfo" page-action="Products" page-class-enabled="true" page-class="btn"
-     page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
+     page-class-normal="btn-outline-dark" page-class-selected="btn-primary" 
+     page-url-categories="@Model.SelectedCategories" 
+     page-url-colors="@Model.SelectedColors"
+     page-url-itemsPerPage="@Model.ItemsPerPage"
+     class="btn-group pull-right m-1"></div>
+
+<script>
+    function selectAll(type) {
+        var checkboxes = document.getElementsByName(type);
+        var selectAllCheckbox = document.getElementById("selectAll" + type.charAt(0).toUpperCase() + type.slice(1));
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = selectAllCheckbox.checked;
+        }
+    }
+
+    function clearFilters() {
+        document.getElementById("selectAllCategories").checked = false;
+        document.getElementById("selectAllColors").checked = false;
+        var checkboxesCategories = document.getElementsByName("categories");
+        var checkboxesColors = document.getElementsByName("colors");
+        for (var i = 0; i < checkboxesCategories.length; i++) {
+            checkboxesCategories[i].checked = false;
+        }
+        for (var i = 0; i < checkboxesColors.length; i++) {
+            checkboxesColors[i].checked = false;
+        }
+        // Optionally, you can submit the form after clearing the filters
+        // document.querySelector("form").submit();
+    }
+</script>

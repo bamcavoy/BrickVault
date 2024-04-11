@@ -9,8 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
 
-var myAppConn= builder.Configuration.GetConnectionString("Constr");
-
 services.AddAuthentication().AddGoogle(googleOptions =>
 {
     googleOptions.ClientId = configuration["Authentication:Google:ClientId"];
@@ -29,6 +27,7 @@ builder.Services.AddDbContext<IntexDbContext>(options =>
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+    // .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<IntexDbContext>();
 
 builder.Services.AddControllersWithViews();
@@ -67,6 +66,17 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+// Add services to the container.
+builder.Services.AddDistributedMemoryCache(); // Required to enable session state
+
+builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM SESSION HIJACKING 
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Enhance security by preventing access to the cookie via JavaScript
+    options.Cookie.IsEssential = true; // The session cookie will not be subject to consent checks
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
+});
+
 builder.Services.AddHsts(options =>
 {
     options.Preload = true;
@@ -95,16 +105,27 @@ app.UseRouting();
 
 app.UseAuthorization();
 
-
-app.MapControllerRoute("paged", "Products/{pageNum}",
-    new { Controller = "Home", action = "Products"});
-app.MapControllerRoute("pagedwithitems", "Products/{pageNum}/{itemsPerPage}items",
-    new { Controller = "Home", action = "Products"});
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}"
 );
 
+
+
 app.MapRazorPages();
 
+// using (var scope = app.Services.CreateScope())
+// {
+//     var roleManager = 
+//         scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+//
+//     var roles = new[] { "Admin", "Manager", "Member" };
+//     foreach (var role in roles )
+//     {
+//         if (!await roleManager.RoleExistsAsync(role))
+//             await roleManager.CreateAsync(new IdentityRole(role));
+//     }
+//
+//
+// }
 app.Run();

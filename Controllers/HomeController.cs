@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace BrickVault.Controllers;
 
@@ -17,8 +18,10 @@ public class HomeController : Controller
     
     public IActionResult Index()
     {
+        List<int> topItems = [27, 33, 34, 37, 24];
+        
         ViewBag.Products = _repo.Products
-            .OrderBy(x => x.Name)
+            .Where(x => topItems.Contains(x.ProductId))
             .ToList();
         
         return View();
@@ -35,35 +38,52 @@ public class HomeController : Controller
     }
     
     [HttpGet]
-    public IActionResult Products(int itemsPerPage = 10, int pageNum = 1)
+    public IActionResult Products(int itemsPerPage = 10, int pageNum = 1, List<int> categories = null, List<string> colors = null)
     {
         var primaryColors = _repo.Products.Select(x => x.PrimaryColor);
         var secondaryColors = _repo.Products.Select(x => x.SecondaryColor);
-
         var allColors = primaryColors.Concat(secondaryColors).Distinct().ToList();
-        
+    
+        // Filter products based on selected categories and colors
+        IQueryable<Product> filteredProducts = _repo.Products;
+
+        if (categories != null && categories.Any())
+        {
+            filteredProducts = filteredProducts.Where(p => p.ProductCategories.Any(pc => categories.Contains(pc.CategoryId)));
+        }
+
+        if (colors != null && colors.Any())
+        {
+            filteredProducts = filteredProducts.Where(p => colors.Contains(p.PrimaryColor) || colors.Contains(p.SecondaryColor));
+        }
+    
         var model = new ProductListViewModel
         {
-            Products = _repo.Products
+            Products = filteredProducts
                 .OrderBy(x => x.Name)
                 .Skip((pageNum - 1) * itemsPerPage)
                 .Take(itemsPerPage),
-        
+
             PaginationInfo = new PaginationInfo
             {
                 CurrentPage = pageNum,
                 ItemsPerPage = itemsPerPage,
-                TotalItems = _repo.Products.Count()
+                TotalItems = filteredProducts.Count()
             },
-            
+        
             Categories = _repo.Categories
                 .OrderBy(x => x.CategoryName),
-            
-            Colors = allColors
+        
+            Colors = allColors,
+            SelectedCategories = categories,
+            SelectedColors = colors,
+            ItemsPerPage = itemsPerPage
         };
 
         return View(model);
     }
+
+
     
     public IActionResult AboutUs()
     {
@@ -77,6 +97,30 @@ public class HomeController : Controller
     
     public IActionResult Cart()
     {
+        return View();
+    }
+    
+    public IActionResult ProductDetails(int productId)
+    {
+        Product product = _repo.Products
+            .FirstOrDefault(x => x.ProductId == productId);
+
+        ViewBag.Product = product;
+
+        List<byte?> recommendationIds = _repo.ItemRecommendations
+            .Where(x => x.ProductId == productId)
+            .Select(x => new List<byte?> { x.Recommendation1, x.Recommendation2, x.Recommendation3, x.Recommendation4, x.Recommendation5 })
+            .ToList()
+            .SelectMany(x => x)
+            .ToList();
+
+
+        List<Product> recommendationProducts = _repo.Products
+            .Where(x => recommendationIds.Contains(x.ProductId))
+            .ToList();
+
+        ViewBag.Recommendations = recommendationProducts;
+        
         return View();
     }
 }
