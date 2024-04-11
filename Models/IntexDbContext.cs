@@ -9,6 +9,7 @@ public partial class IntexDbContext : IdentityDbContext
 {
     public IntexDbContext()
     {
+        
     }
 
     public IntexDbContext(DbContextOptions<IntexDbContext> options)
