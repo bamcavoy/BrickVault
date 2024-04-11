@@ -8,10 +8,12 @@ namespace BrickVault.Controllers;
 public class AdminController: Controller
 {
     private readonly ILegoRepository _repository;
+    private readonly ILogger<AdminController> _logger;
 
-    public AdminController(ILegoRepository repository)
+    public AdminController(ILegoRepository repository, ILogger<AdminController> logger)
     {
         _repository = repository;
+        _logger = logger;
     }
     
     [HttpGet]
@@ -34,12 +36,36 @@ public class AdminController: Controller
     }
     
     [HttpGet]
-    public IActionResult AdminEditProduct()
+    public IActionResult AdminEditProduct(int id)
     {
-        //This will extract data from the db after the admin selects a product to edit from the ProductList
-        //You'll be pulling off the production_id
-        return View();
+        var product = _repository.Products.FirstOrDefault(p => p.ProductId == id);
+        if (product == null)
+        {
+            return NotFound();
+        }
+        return View(product);
     }
+    
+    [HttpPost]
+    public IActionResult AdminEditProduct(Product product)
+    {
+        if (ModelState.IsValid)
+        {
+            _logger.LogInformation("Updating product with ID {ProductId}", product.ProductId);
+            _repository.UpdateProduct(product);
+            _repository.SaveChanges();
+            _logger.LogInformation("Product with ID {ProductId} updated successfully", product.ProductId);
+            return RedirectToAction("AdminProductList");
+        }
+        else
+        {
+            _logger.LogWarning("Model state is invalid. Errors: {ModelStateErrors}", string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
+        }
+        return View(product);
+    }
+
+
+
     
     [HttpPost]
     public IActionResult AdminEditUsers()
@@ -96,10 +122,8 @@ public class AdminController: Controller
         }
         catch (Exception ex)
         {
-            // Log the exception or display an error message
             ModelState.AddModelError("", "An error occurred while deleting the product.");
 
-            // Ensure that a product object is passed to the view, even if it's null
             return View("DeleteProductConfirmation", product);
         }
 

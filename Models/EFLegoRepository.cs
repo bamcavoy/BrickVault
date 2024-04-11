@@ -24,6 +24,17 @@ namespace BrickVault.Models
         {
             _context.Products.Add(product);
         }
+        
+        public void UpdateProduct(Product product)
+        {
+            var existingProduct = _context.Products.Find(product.ProductId);
+            if (existingProduct != null)
+            {
+                _context.Entry(existingProduct).CurrentValues.SetValues(product);
+            }
+        }
+
+
 
 
         public void DeleteProduct(Product product)
