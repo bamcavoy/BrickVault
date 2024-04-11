@@ -35,35 +35,52 @@ public class HomeController : Controller
     }
     
     [HttpGet]
-    public IActionResult Products(int itemsPerPage = 10, int pageNum = 1)
+    public IActionResult Products(int itemsPerPage = 10, int pageNum = 1, List<int> categories = null, List<string> colors = null)
     {
         var primaryColors = _repo.Products.Select(x => x.PrimaryColor);
         var secondaryColors = _repo.Products.Select(x => x.SecondaryColor);
-
         var allColors = primaryColors.Concat(secondaryColors).Distinct().ToList();
-        
+    
+        // Filter products based on selected categories and colors
+        IQueryable<Product> filteredProducts = _repo.Products;
+
+        if (categories != null && categories.Any())
+        {
+            filteredProducts = filteredProducts.Where(p => p.ProductCategories.Any(pc => categories.Contains(pc.CategoryId)));
+        }
+
+        if (colors != null && colors.Any())
+        {
+            filteredProducts = filteredProducts.Where(p => colors.Contains(p.PrimaryColor) || colors.Contains(p.SecondaryColor));
+        }
+    
         var model = new ProductListViewModel
         {
-            Products = _repo.Products
+            Products = filteredProducts
                 .OrderBy(x => x.Name)
                 .Skip((pageNum - 1) * itemsPerPage)
                 .Take(itemsPerPage),
-        
+
             PaginationInfo = new PaginationInfo
             {
                 CurrentPage = pageNum,
                 ItemsPerPage = itemsPerPage,
-                TotalItems = _repo.Products.Count()
+                TotalItems = filteredProducts.Count()
             },
-            
+        
             Categories = _repo.Categories
                 .OrderBy(x => x.CategoryName),
-            
-            Colors = allColors
+        
+            Colors = allColors,
+            SelectedCategories = categories,
+            SelectedColors = colors,
+            ItemsPerPage = itemsPerPage
         };
 
         return View(model);
     }
+
+
     
     public IActionResult AboutUs()
     {
