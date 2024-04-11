@@ -6,44 +6,69 @@
 }
 
 <h2>Edit Product</h2>
+<br/>
 
-<form asp-action="AdminEditProduct" method="post">
-    <input type="hidden" asp-for="ProductId" />
-    <div>
-        <label asp-for="Name">Name</label>
-        <input asp-for="Name" />
-    </div>
-    <div>
-        <label asp-for="Year">Year</label>
-        <input asp-for="Year" />
-    </div>
-    <div>
-        <label asp-for="NumParts">Number of Parts</label>
-        <input asp-for="NumParts" />
-    </div>
-    <div>
-        <label asp-for="Price">Price</label>
-        <input asp-for="Price" />
-    </div>
-    <div>
-        <label asp-for="ImgLink">Image Link</label>
-        <input asp-for="ImgLink" />
-    </div>
-    <div>
-        <label asp-for="PrimaryColor">Primary Color</label>
-        <input asp-for="PrimaryColor" />
-    </div>
-    <div>
-        <label asp-for="SecondaryColor">Secondary Color</label>
-        <input asp-for="SecondaryColor" />
-    </div>
-    <div>
-        <label asp-for="Description">Description</label>
-        <textarea asp-for="Description"></textarea>
-    </div>
-    <div>
-        <label asp-for="AvgRating">Average Rating</label>
-        <input asp-for="AvgRating" />
-    </div>
-    <button type="submit">Save Changes</button>
-</form>
+<div class="col-12">
+    <form asp-action="AdminEditProduct" method="post">
+        <input type="hidden" asp-for="ProductId" />
+        <div class="row">
+            <div class="col-4">
+                <label asp-for="Name">Name</label>
+                <br/>
+                <input asp-for="Name" class="input-group form-control"/>
+            </div>
+            <div class="col-4">
+                <label asp-for="Year">Year</label>
+                <br/>
+                <input asp-for="Year" class="form-control"/>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-4">
+                <label asp-for="ImgLink">Image Link</label>
+                <br/>
+                <input asp-for="ImgLink" class="input-group form-control"/>
+            </div>
+            <div class="col-4">
+                <label asp-for="Price">Price</label>
+                <br/>
+                <input asp-for="Price" class="form-control"/>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-2">
+                <label asp-for="NumParts">Number of Parts</label>
+                <br/>
+                <input asp-for="NumParts" class="form-control"/>
+            </div>
+            <div class="col-2">
+                <label asp-for="AvgRating">Average Rating</label>
+                <br/>
+                <input asp-for="AvgRating" class="form-control"/>
+            </div>
+            <div class="col-2">
+                <label asp-for="PrimaryColor">Primary Color</label>
+                <br/>
+                <input asp-for="PrimaryColor" class="form-control"/>
+            </div>
+            <div class="col-2">
+                <label asp-for="SecondaryColor">Secondary Color</label>
+                <br/>
+                <input asp-for="SecondaryColor" class="form-control"/>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+            <div class="col-8">
+                <label asp-for="Description">Description</label>
+                <br/>
+                <textarea asp-for="Description" class="form-control"></textarea>
+            </div>
+        </div>
+        <br/>
+        <button type="submit" class="btn btn-secondary">Save Changes</button>
+    </form>
+</div>
+
