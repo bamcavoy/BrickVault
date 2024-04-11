@@ -72,7 +72,8 @@
                             <button type="submit" class="btn btn-primary">Apply</button>
                         </div>
                     </div>
-                </form> 
+                    <input type="hidden" name="pageNum" value="1"/>
+                </form>
             </div>
         </div>
         <br/><br/>
@@ -108,7 +109,11 @@
 
 <br/>
 <div page-model="@Model.PaginationInfo" page-action="Products" page-class-enabled="true" page-class="btn"
-     page-class-normal="btn-outline-dark" page-class-selected="btn-primary" class="btn-group pull-right m-1"></div>
+     page-class-normal="btn-outline-dark" page-class-selected="btn-primary" 
+     page-url-categories="@Model.SelectedCategories" 
+     page-url-colors="@Model.SelectedColors"
+     page-url-itemsPerPage="@Model.ItemsPerPage"
+     class="btn-group pull-right m-1"></div>
 
 <script>
     function selectAll(type) {
