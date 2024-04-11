@@ -300,5 +300,5 @@ public partial class IntexDbContext : IdentityDbContext
         
     }
 
-    //partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }
