@@ -5,6 +5,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
@@ -32,6 +33,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+// CONFIGURE PASSWORD SETTINGS
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Default Lockout settings.
@@ -53,7 +55,7 @@ builder.Services.Configure<IdentityOptions>(options =>
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = false;
 });
-builder.Services.ConfigureApplicationCookie(options =>
+builder.Services.ConfigureApplicationCookie(options => // Cookie Settings
 {
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.Cookie.Name = "YourAppCookieName";
@@ -66,10 +68,10 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-// Add services to the container.
+// Add services to the container. EXTRA REQUIREMENT FOR INTEX
 builder.Services.AddDistributedMemoryCache(); // Required to enable session state
 
-builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM MIDDLE MAN SESSION HIJACKING 
+builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM SESSION HIJACKING 
 {
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
     options.Cookie.HttpOnly = true; // Enhance security by preventing access to the cookie via JavaScript
@@ -103,6 +105,29 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+// CSP HEADER
+app.Use(async (context, next) =>
+{
+    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+
+    // Define your Content-Security-Policy
+    string csp = "default-src 'self'; " +
+                 "script-src 'self' 'unsafe-inline'; " +
+                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " + // For Google Fonts
+                 "img-src 'self' data: https://m.media-amazon.com https://www.lego.com https://images.brickset.com https://www.brickeconomy.com; " + // Domains for images
+                 "font-src 'self' https://fonts.gstatic.com;"; // For Google Fonts
+
+    // Add Content-Security-Policy without overwriting existing headers
+    if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
+    {
+        context.Response.Headers.Add("Content-Security-Policy", csp);
+    }
+
+    await next();
+});
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -114,12 +139,13 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
+// ROLE BASED AUTHENTICATION
 using (var scope = app.Services.CreateScope())
 {
     var roleManager = 
         scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-    var roles = new[] { "Admin", "Customer" }; // assigns roles
+    var roles = new[] { "Admin", "Customer" };
     foreach (var role in roles )
     {
         if (!await roleManager.RoleExistsAsync(role))
@@ -128,7 +154,6 @@ using (var scope = app.Services.CreateScope())
 
 
 }
-
 using (var scope = app.Services.CreateScope())
 {
     var userManager = 
@@ -137,7 +162,7 @@ using (var scope = app.Services.CreateScope())
     string email = "admin@admin.com";
     string password = "Test12345!";
 
-    if (await userManager.FindByEmailAsync(email) == null) // creates values for if a user doesn't have an admin account
+    if (await userManager.FindByEmailAsync(email) == null)
     {
         var user = new IdentityUser();
         user.UserName = email;

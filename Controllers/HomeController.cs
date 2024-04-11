@@ -28,6 +28,11 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult Cart()
+    {
+        return View();
+    }
+
     public IActionResult Register()
     {
         return View();
@@ -76,9 +81,9 @@ public class HomeController : Controller
                 .OrderBy(x => x.CategoryName),
         
             Colors = allColors,
-            SelectedCategories = categories,
-            SelectedColors = colors,
-            ItemsPerPage = itemsPerPage
+            //SelectedCategories = categories,
+            //SelectedColors = colors,
+            //ItemsPerPage = itemsPerPage
         };
 
         return View(model);
@@ -95,12 +100,7 @@ public class HomeController : Controller
     {
         return View();
     }
-    
-    public IActionResult Cart()
-    {
-        return View();
-    }
-    
+
     public IActionResult ProductDetails(int productId)
     {
         Product product = _repo.Products

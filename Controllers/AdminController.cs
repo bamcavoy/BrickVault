@@ -89,9 +89,15 @@ public class AdminController : Controller
 
     public IActionResult AdminUserList()
     {
-        var users = _repository.AspNetUsers.ToList(); // Fetch the list of users
-        return View("~/Pages/Admin/AdminUserList.cshtml", users); // Pass this list to the view
+        var usersQuery = _repository.AspNetUsers; // Keep it as IQueryable
+        if (usersQuery == null)
+        {
+            // Handle the null case, maybe log it or return a different view
+            return View("~/Pages/Admin/AdminUserList.cshtml");
+        }
+        return View("~/Pages/Admin/AdminUserList.cshtml", usersQuery.ToList()); // Materialize the query here
     }
+
 
     public IActionResult DeleteProductConfirmation(int productId)
     {
