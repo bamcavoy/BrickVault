@@ -1,11 +1,13 @@
 using System.Diagnostics;
+using Azure;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BrickVault.Controllers;
 
-public class AdminController: Controller
+public class AdminController : Controller
 {
     private readonly ILegoRepository _repository;
     private readonly ILogger<AdminController> _logger;
@@ -15,26 +17,25 @@ public class AdminController: Controller
         _repository = repository;
         _logger = logger;
     }
-    
+
     [HttpGet]
     public IActionResult AdminProductList()
     {
         var products = _repository.Products.ToList();
-        return View(products);
+        return View("~/Pages/Admin/AdminProductList.cshtml", products);
     }
 
     public IActionResult AdminDashboard()
     {
         return View();
     }
-    
-        
+
     [HttpDelete]
     public void DeleteProduct()
     {
         //Make da function
     }
-    
+
     [HttpGet]
     public IActionResult AdminEditProduct(int id)
     {
@@ -43,9 +44,9 @@ public class AdminController: Controller
         {
             return NotFound();
         }
-        return View(product);
+        return View("~/Pages/Admin/AdminEditProduct.cshtml", product);
     }
-    
+
     [HttpPost]
     public IActionResult AdminEditProduct(Product product)
     {
@@ -61,29 +62,24 @@ public class AdminController: Controller
         {
             _logger.LogWarning("Model state is invalid. Errors: {ModelStateErrors}", string.Join(", ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)));
         }
-        return View(product);
+        return View("~/Pages/Admin/AdminEditProduct.cshtml", product);
     }
 
-
-
-    
     [HttpPost]
     public IActionResult AdminEditUsers()
     {
-        return View();
+        return View("~/Pages/Admin/AdminEditUsers.cshtml");
     }
-
-    
 
     public IActionResult AdminReviewOrders()
     {
         //In this method, we want the admin to be able to look at fraudulent activity, and have a way to resolve this solution??
-        return View();
+        return View("~/Pages/Admin/AdminReviewOrders.cshtml");
     }
 
     public IActionResult AdminAddUser()
     {
-        return View();
+        return View("~/Pages/Admin/AdminAddUser.cshtml");
     }
 
     public void AdminSwitchBetweenViews()
@@ -94,9 +90,9 @@ public class AdminController: Controller
     public IActionResult AdminUserList()
     {
         var users = _repository.AspNetUsers.ToList(); // Fetch the list of users
-        return View(users); // Pass this list to the view
+        return View("~/Pages/Admin/AdminUserList.cshtml", users); // Pass this list to the view
     }
-    
+
     public IActionResult DeleteProductConfirmation(int productId)
     {
         var product = _repository.Products.FirstOrDefault(p => p.ProductId == productId);
@@ -104,9 +100,8 @@ public class AdminController: Controller
         {
             return NotFound();
         }
-        return View(product);
+        return View("~/Pages/Admin/DeleteProductConfirmation.cshtml", product);
     }
-
 
     [HttpPost]
     public IActionResult DeleteProductConfirmed(int productId)
@@ -123,22 +118,17 @@ public class AdminController: Controller
         catch (Exception ex)
         {
             ModelState.AddModelError("", "An error occurred while deleting the product.");
-
-            return View("DeleteProductConfirmation", product);
+            return View("~/Pages/Admin/DeleteProductConfirmation.cshtml", product);
         }
 
         return RedirectToAction("AdminProductList");
     }
 
-
-
-
-
     [HttpGet]
     public IActionResult AdminAddProduct()
     {
         Product newProduct = new Product();
-        return View(newProduct);
+        return View("~/Pages/Admin/AdminAddProduct.cshtml", newProduct);
     }
 
     [HttpPost]
@@ -148,12 +138,8 @@ public class AdminController: Controller
         {
             _repository.AddProduct(product);
             _repository.SaveChanges();
-            // Assuming you have a Save method in your repository
             return RedirectToAction("AdminProductList");
         }
-        return View(product);
+        return View("~/Pages/Admin/AdminAddProduct.cshtml", product);
     }
-
-
-   
 }
