@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <div id="cookieConsentContainer" style="position: fixed; bottom: 0; background-color: #efefef; width: 100%; display: none; z-index: 1000; padding: 10px; border-top: 1px solid #d3d3d3;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-9">
+                    <p>This website uses cookies to ensure you get the best experience on our website. 
+                    <a href="/privacy">Learn More</a></p>
+                </div>
+                <div class="col-md-3 text-right">
+                    <button id="acceptCookieConsent" class="btn btn-primary">Accept</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            let acceptCookieConsent = localStorage.getItem('acceptCookieConsent');
+            if (acceptCookieConsent !== 'true') {
+                $('#cookieConsentContainer').fadeIn(400);
+            }
+            $('#acceptCookieConsent').click(function () {
+                localStorage.setItem('acceptCookieConsent', 'true');
+                $('#cookieConsentContainer').fadeOut(400);
+            });
+        });
+    </script>
+</html>

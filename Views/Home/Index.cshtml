@@ -5,7 +5,7 @@
 
 
 <div class="text-center">
-    <img src="~/lib/Logo.png" style="height: 200px"></img>
+    @* <img src="~/lib/Logo.png" style="height: 200px"></img> *@
     <br/> <br/>
     <a href="@Url.Action("Products", "Home")" class="btn btn-secondary">Browse Products</a>
 </div>
@@ -31,5 +31,6 @@
     <div class="col-1"></div>
   </div>
 </div>
-    <br/><br/><br/>
-    <a asp-controller="Home" asp-action="ReviewOrders">Review Orders</a>
+<br/><br/>
+<a asp-controller="Home" asp-action="ReviewOrders" class="btn btn-close-white">Review Orders</a>
+@* @await Html.PartialAsync("_CookieConsentPartial")  *@

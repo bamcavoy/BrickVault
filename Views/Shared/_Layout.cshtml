@@ -3,6 +3,7 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src *; style-src 'self' 'unsafe-inline';"> @* should provide our CSP  tho it says unsafe inline increases vulnerability to our website *@
     <title>@ViewData["Title"] - BrickVault</title>
     <link rel="icon" href="~/lib/Logo.png">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
@@ -56,5 +57,6 @@
 <script src="~/js/site.js" asp-append-version="true"></script>
 <script src="https://kit.fontawesome.com/4c16b1756d.js" crossorigin="anonymous"></script>
 @await RenderSectionAsync("Scripts", required: false)
+@await Html.PartialAsync("_CookieConsentPartial")
 </body>
 </html>

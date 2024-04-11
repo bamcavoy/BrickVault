@@ -56,7 +56,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.Cookie.Name = "YourAppCookieName";
     options.Cookie.HttpOnly = true;
-    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
     options.LoginPath = "/Identity/Account/Login";
     // ReturnUrlParameter requires 
     //using Microsoft.AspNetCore.Authentication.Cookies;
@@ -64,7 +64,19 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
+// Add services to the container.
+builder.Services.AddDistributedMemoryCache(); // Required to enable session state
+
+builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM SESSION HIJACKING 
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+    options.Cookie.HttpOnly = true; // Enhance security by preventing access to the cookie via JavaScript
+    options.Cookie.IsEssential = true; // The session cookie will not be subject to consent checks
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are only sent over HTTPS
+});
+
 var app = builder.Build();
+// Middleware starts
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -81,10 +93,12 @@ else
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+// Add the following line before app.UseRouting();
+app.UseSession(); // Make sure this comes before UseRouting()
+
 app.UseRouting();
 
 app.UseAuthorization();
-
 
 app.MapControllerRoute("paged", "Products/{pageNum}",
     new { Controller = "Home", action = "Products"});

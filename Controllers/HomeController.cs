@@ -2,6 +2,7 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BrickVault.Controllers;
 
@@ -68,6 +69,7 @@ public class HomeController : Controller
         return View();
     }
     
+    [Authorize]
     public IActionResult ReviewOrders()
     {
         return View();
