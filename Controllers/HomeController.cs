@@ -2,7 +2,9 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace BrickVault.Controllers;
 
@@ -80,5 +82,12 @@ public class HomeController : Controller
     public IActionResult Cart()
     {
         return View();
+    }
+    // Clears session for user when they logout
+    public async Task<IActionResult> Logout()
+    {
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme); // Sign out the user
+        HttpContext.Session.Clear(); // Clear the session
+        return RedirectToAction("Index", "Home"); // Redirect to the home page or login page
     }
 }
