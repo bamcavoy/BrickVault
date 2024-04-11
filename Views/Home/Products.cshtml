@@ -13,69 +13,72 @@
     
     <div class="row">
         <!-- Filter Column -->
-        <div class="card col-2">
-            <div class="card-header">
-                Filters
-            </div>
-            <div class="card-body">
-                <form asp-controller="Home" asp-action="Products" method="get">
-                    <div class="form-group">
-                        <label for="itemsPerPage">Items Per Page:</label>
-                        <select class="form-control" id="itemsPerPage" name="itemsPerPage">
-                            <option value="5" selected="@(Model.ItemsPerPage == 5)">5</option>
-                            <option value="10" selected="@(Model.ItemsPerPage == 10)">10</option>
-                            <option value="20" selected="@(Model.ItemsPerPage == 20)">20</option>
-                        </select>
-                    </div>
-                    <br/>
-                    
-                    <label>Category:</label>
-                    <div style="height: 200px; overflow-y: auto;" class="form-control">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="selectAllCategories" onclick="selectAll('categories')" />
-                            <label class="form-check-label" for="selectAllCategories">-Select All-</label>
+        <div class="col-2">
+            <div class="card">
+                <div class="card-header">
+                    Filters
+                </div>
+                <div class="card-body">
+                    <form asp-controller="Home" asp-action="Products" method="get">
+                        <div class="form-group">
+                            <label for="itemsPerPage">Items Per Page:</label>
+                            <select class="form-control" id="itemsPerPage" name="itemsPerPage">
+                                <option value="5" selected="@(Model.ItemsPerPage == 5)">5</option>
+                                <option value="10" selected="@(Model.ItemsPerPage == 10)">10</option>
+                                <option value="20" selected="@(Model.ItemsPerPage == 20)">20</option>
+                            </select>
                         </div>
-                        @foreach (Category c in Model.Categories)
-                        {
+                        <br/>
+                
+                        <label>Category:</label>
+                        <div style="height: 200px; overflow-y: auto;" class="form-control">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="categories" id="category_@c.CategoryId" value="@c.CategoryId" @(Model.SelectedCategories != null && Model.SelectedCategories.Contains(c.CategoryId) ? "checked" : "")>
-                                <label class="form-check-label" for="category_@c.CategoryId">
-                                    @c.CategoryName
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="selectAllCategories" onclick="selectAll('categories')"/>
+                                <label class="form-check-label" for="selectAllCategories">-Select All-</label>
                             </div>
-                        }
-                    </div>
-                    <br/>
-
-                    <label>Color:</label>
-                    <div style="height: 200px; overflow-y: auto;" class="form-control">
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="selectAllColors" onclick="selectAll('colors')" />
-                            <label class="form-check-label" for="selectAllColors">-Select All-</label>
+                            @foreach (Category c in Model.Categories)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="categories" id="category_@c.CategoryId" value="@c.CategoryId" @(Model.SelectedCategories != null && Model.SelectedCategories.Contains(c.CategoryId) ? "checked" : "")>
+                                    <label class="form-check-label" for="category_@c.CategoryId">
+                                        @c.CategoryName
+                                    </label>
+                                </div>
+                            }
                         </div>
-                        @foreach (string c in Model.Colors)
-                        {
+                        <br/>
+                
+                        <label>Color:</label>
+                        <div style="height: 200px; overflow-y: auto;" class="form-control">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="colors" id="color_@c" value="@c" @(Model.SelectedColors != null && Model.SelectedColors.Contains(c) ? "checked" : "")>
-                                <label class="form-check-label" for="color_@c">
-                                    @c
-                                </label>
+                                <input class="form-check-input" type="checkbox" id="selectAllColors" onclick="selectAll('colors')"/>
+                                <label class="form-check-label" for="selectAllColors">-Select All-</label>
                             </div>
-                        }
-                    </div>
-                    <br/>
-                    <div class="row">
-                        <div class="col">
-                            <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear</button>
+                            @foreach (string c in Model.Colors)
+                            {
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="colors" id="color_@c" value="@c" @(Model.SelectedColors != null && Model.SelectedColors.Contains(c) ? "checked" : "")>
+                                    <label class="form-check-label" for="color_@c">
+                                        @c
+                                    </label>
+                                </div>
+                            }
                         </div>
-                        <div class="col">
-                            <button type="submit" class="btn btn-primary">Apply</button>
+                        <br/>
+                        <div class="row">
+                            <div class="col">
+                                <button type="button" class="btn btn-secondary" onclick="clearFilters()">Clear</button>
+                            </div>
+                            <div class="col">
+                                <button type="submit" class="btn btn-primary">Apply</button>
+                            </div>
                         </div>
-                    </div>
-                    <input type="hidden" name="pageNum" value="1"/>
-                </form>
+                        <input type="hidden" name="pageNum" value="1"/>
+                    </form>
+                </div>
             </div>
         </div>
+            
         <br/><br/>
 
         <!-- Product Cards -->
