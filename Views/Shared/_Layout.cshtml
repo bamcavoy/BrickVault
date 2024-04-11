@@ -3,7 +3,15 @@
 <head>
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src *; style-src 'self' 'unsafe-inline';"> @* should provide our CSP *@
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        style-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://ka-f.fontawesome.com; 
+        script-src 'self' 'unsafe-inline' https://stackpath.bootstrapcdn.com https://kit.fontawesome.com; 
+        img-src * data:;
+        connect-src 'self' https://ka-f.fontawesome.com;
+        font-src 'self' https://ka-f.fontawesome.com;">
+
+ @* should provide our CSP *@
     <title>@ViewData["Title"] - BrickVault</title>
     <link rel="icon" href="~/lib/Logo.png">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css"/>
@@ -54,8 +62,9 @@
 </footer>
 <script>
     function redirectToProductDetails(productId) {
-        // Redirect to the product details page
-        window.location.href = '/Home/ProductDetails?productId=' + productId;
+        // Redirect to the product details page using ASP.NET MVC Url.Action helper
+        var url = '@Url.Action("ProductDetails", "Home")' + '?productId=' + productId;
+        window.location.href = url;
     }
 </script>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>

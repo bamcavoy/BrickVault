@@ -133,28 +133,4 @@
      page-url-colors="@Model.SelectedColors"
      page-url-itemsPerPage="@Model.ItemsPerPage"
      class="btn-group pull-right m-1"></div>
-
-<script>
-    function selectAll(type) {
-        var checkboxes = document.getElementsByName(type);
-        var selectAllCheckbox = document.getElementById("selectAll" + type.charAt(0).toUpperCase() + type.slice(1));
-        for (var i = 0; i < checkboxes.length; i++) {
-            checkboxes[i].checked = selectAllCheckbox.checked;
-        }
-    }
-
-    function clearFilters() {
-        document.getElementById("selectAllCategories").checked = false;
-        document.getElementById("selectAllColors").checked = false;
-        var checkboxesCategories = document.getElementsByName("categories");
-        var checkboxesColors = document.getElementsByName("colors");
-        for (var i = 0; i < checkboxesCategories.length; i++) {
-            checkboxesCategories[i].checked = false;
-        }
-        for (var i = 0; i < checkboxesColors.length; i++) {
-            checkboxesColors[i].checked = false;
-        }
-        // Optionally, you can submit the form after clearing the filters
-        // document.querySelector("form").submit();
-    }
-</script>
+     
