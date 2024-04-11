@@ -1,0 +1,49 @@
+@model BrickVault.Models.Product
+
+@{
+    ViewBag.Title = "Edit Product";
+    Layout = "_Layout";
+}
+
+<h2>Edit Product</h2>
+
+<form asp-action="AdminEditProduct" method="post">
+    <input type="hidden" asp-for="ProductId" />
+    <div>
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" />
+    </div>
+    <div>
+        <label asp-for="Year">Year</label>
+        <input asp-for="Year" />
+    </div>
+    <div>
+        <label asp-for="NumParts">Number of Parts</label>
+        <input asp-for="NumParts" />
+    </div>
+    <div>
+        <label asp-for="Price">Price</label>
+        <input asp-for="Price" />
+    </div>
+    <div>
+        <label asp-for="ImgLink">Image Link</label>
+        <input asp-for="ImgLink" />
+    </div>
+    <div>
+        <label asp-for="PrimaryColor">Primary Color</label>
+        <input asp-for="PrimaryColor" />
+    </div>
+    <div>
+        <label asp-for="SecondaryColor">Secondary Color</label>
+        <input asp-for="SecondaryColor" />
+    </div>
+    <div>
+        <label asp-for="Description">Description</label>
+        <textarea asp-for="Description"></textarea>
+    </div>
+    <div>
+        <label asp-for="AvgRating">Average Rating</label>
+        <input asp-for="AvgRating" />
+    </div>
+    <button type="submit">Save Changes</button>
+</form>

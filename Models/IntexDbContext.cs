@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrickVault.Models;
 
-public partial class IntexDbContext : DbContext
+public partial class IntexDbContext : IdentityDbContext
 {
     public IntexDbContext()
     {
@@ -15,36 +16,21 @@ public partial class IntexDbContext : DbContext
     {
     }
 
-    public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
-
-    public virtual DbSet<AspNetRoleClaim> AspNetRoleClaims { get; set; }
-
-    public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
-
-    public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
-
-    public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
-
-    public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
-
     public virtual DbSet<Category> Categories { get; set; }
-
     public virtual DbSet<Customer> Customers { get; set; }
-
     public virtual DbSet<ItemRecommendation> ItemRecommendations { get; set; }
-
     public virtual DbSet<LineItem> LineItems { get; set; }
-
     public virtual DbSet<Order> Orders { get; set; }
-
     public virtual DbSet<Product> Products { get; set; }
-
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
-
     public virtual DbSet<UserRecommendation> UserRecommendations { get; set; }
+    public IQueryable<AspNetUser> AspNetUsers { get; set; }
 
+    
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        base.OnModelCreating(modelBuilder);
+
         modelBuilder.Entity<AspNetRole>(entity =>
         {
             entity.HasIndex(e => e.NormalizedName, "RoleNameIndex")
@@ -75,17 +61,17 @@ public partial class IntexDbContext : DbContext
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
             entity.Property(e => e.UserName).HasMaxLength(256);
 
-            entity.HasMany(d => d.Roles).WithMany(p => p.Users)
-                .UsingEntity<Dictionary<string, object>>(
-                    "AspNetUserRole",
-                    r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
-                    l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
-                    j =>
-                    {
-                        j.HasKey("UserId", "RoleId");
-                        j.ToTable("AspNetUserRoles");
-                        j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
-                    });
+            // entity.HasMany(d => d.Roles).WithMany(p => p.Users)
+            //     .UsingEntity<Dictionary<string, object>>(
+            //         "AspNetUserRole",
+            //         r => r.HasOne<AspNetRole>().WithMany().HasForeignKey("RoleId"),
+            //         l => l.HasOne<AspNetUser>().WithMany().HasForeignKey("UserId"),
+            //         j =>
+            //         {
+            //             j.HasKey("UserId", "RoleId");
+            //             j.ToTable("AspNetUserRoles");
+            //             j.HasIndex(new[] { "RoleId" }, "IX_AspNetUserRoles_RoleId");
+            //         });
         });
 
         modelBuilder.Entity<AspNetUserClaim>(entity =>
@@ -228,13 +214,17 @@ public partial class IntexDbContext : DbContext
 
         modelBuilder.Entity<Product>(entity =>
         {
-            entity.Property(e => e.ProductId).HasColumnName("product_ID");
+            entity.HasKey(e => e.ProductId); // Ensure that ProductId is the primary key
+            entity.Property(e => e.ProductId)
+                .HasColumnName("product_ID")
+                .ValueGeneratedOnAdd(); // Configure ProductId as an identity column
+
             entity.Property(e => e.AvgRating).HasColumnName("avg_rating");
             entity.Property(e => e.Description)
                 .HasMaxLength(2750)
                 .HasColumnName("description");
             entity.Property(e => e.ImgLink)
-                .HasMaxLength(150)
+                .HasMaxLength(3500)
                 .HasColumnName("img_link");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
@@ -249,6 +239,7 @@ public partial class IntexDbContext : DbContext
                 .HasColumnName("secondary_color");
             entity.Property(e => e.Year).HasColumnName("year");
         });
+
 
         modelBuilder.Entity<ProductCategory>(entity =>
         {
@@ -304,6 +295,9 @@ public partial class IntexDbContext : DbContext
             .HasForeignKey(pc => pc.CategoryId);
 
         OnModelCreatingPartial(modelBuilder);
+        
+        //OnModelCreatingPartial(modelBuilder);
+        
     }
 
     partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
