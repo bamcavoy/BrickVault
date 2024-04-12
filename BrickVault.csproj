@@ -27,6 +27,7 @@
           <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Microsoft.Extensions.Configuration.AzureAppConfiguration" Version="8.0.0-preview.2" />
+        <PackageReference Include="Microsoft.SqlServer.Types" Version="160.1000.6" />
         <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
 
         <PackageReference Include="bootstrap" Version="5.3.3" />
@@ -35,6 +36,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.0" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.8.6" />
     </ItemGroup>
 
     <ItemGroup>

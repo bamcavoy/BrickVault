@@ -15,6 +15,11 @@ services.AddAuthentication().AddGoogle(googleOptions =>
     googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"];
 });
 
+// services.AddIdentity<IdentityUser, IdentityRole>()
+//     .AddEntityFrameworkStores<IntexDbContext>()
+//     .AddDefaultTokenProviders();
+
+
 
 var conString = builder.Configuration["ConnectionString:brickvaultconnection"];
 

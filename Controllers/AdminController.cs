@@ -3,19 +3,23 @@ using Azure;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BrickVault.Controllers;
 
 public class AdminController : Controller
 {
     private readonly ILegoRepository _repository;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly ILogger<AdminController> _logger;
 
-    public AdminController(ILegoRepository repository, ILogger<AdminController> logger)
+    public AdminController(ILegoRepository repository, ILogger<AdminController> logger, UserManager<IdentityUser>usermanager)
     {
         _repository = repository;
         _logger = logger;
+        _userManager = usermanager;
     }
 
     [HttpGet]
@@ -44,8 +48,11 @@ public class AdminController : Controller
         {
             return NotFound();
         }
+
+        ViewBag.Categories = new SelectList(_repository.Categories, "CategoryId", "Name");
         return View("~/Pages/Admin/AdminEditProduct.cshtml", product);
     }
+
 
     [HttpPost]
     public IActionResult AdminEditProduct(Product product)
@@ -65,11 +72,116 @@ public class AdminController : Controller
         return View("~/Pages/Admin/AdminEditProduct.cshtml", product);
     }
 
-    [HttpPost]
-    public IActionResult AdminEditUsers()
+    public IActionResult AdminUserList()
     {
-        return View("~/Pages/Admin/AdminEditUsers.cshtml");
+        var identityUsers = _userManager.Users.ToList(); // Get the list of IdentityUser objects
+
+        // Convert the list of IdentityUser objects to a list of AspNetUser objects
+        var aspNetUsers = identityUsers.Select(iu => new AspNetUser
+        {
+            Id = iu.Id,
+            UserName = iu.UserName,
+            Email = iu.Email,
+            PhoneNumber = iu.PhoneNumber
+            // Map other properties as needed
+        }).ToList();
+
+        // Pass the list of AspNetUser objects to the view
+        return View("~/Pages/Admin/AdminUserList.cshtml", aspNetUsers);
+    }  
+    [HttpGet]
+    public async Task<IActionResult> AdminEditUsers(string id)
+    {
+        var identityUser = await _userManager.FindByIdAsync(id);
+        if (identityUser == null)
+        {
+            return NotFound();
+        }
+
+        var aspNetUser = new AspNetUser
+        {
+            Id = identityUser.Id,
+            UserName = identityUser.UserName,
+            Email = identityUser.Email,
+            PhoneNumber = identityUser.PhoneNumber,
+            // Map other properties as needed
+        };
+
+        return View("~/Pages/Admin/AdminEditUsers.cshtml", aspNetUser);
     }
+
+
+    [HttpPost]
+    public async Task<IActionResult> AdminEditUsers(string id, AspNetUser updatedUser)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
+        {
+            // Update the user properties
+            user.UserName = updatedUser.UserName;
+            user.Email = updatedUser.Email;
+            user.PhoneNumber = updatedUser.PhoneNumber;
+            // Add other properties as needed
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("AdminUserList");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+        }
+
+        return View("~/Pages/Admin/AdminEditUsers.cshtml", updatedUser);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> DeleteUserConfirmation(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var aspNetUser = new AspNetUser
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            // Map other properties as needed
+        };
+
+        return View("~/Pages/Admin/DeleteUserConfirmation.cshtml", aspNetUser);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteUserConfirmed(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user != null)
+        {
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                // Handle errors (optional)
+            }
+        }
+
+        return RedirectToAction("AdminUserList");
+    }
+
+
+
 
     public IActionResult AdminReviewOrders()
     {
@@ -86,18 +198,6 @@ public class AdminController : Controller
     {
         //MakeDaFunction
     }
-
-    public IActionResult AdminUserList()
-    {
-        var usersQuery = _repository.AspNetUsers; // Keep it as IQueryable
-        if (usersQuery == null)
-        {
-            // Handle the null case, maybe log it or return a different view
-            return View("~/Pages/Admin/AdminUserList.cshtml");
-        }
-        return View("~/Pages/Admin/AdminUserList.cshtml", usersQuery.ToList()); // Materialize the query here
-    }
-
 
     public IActionResult DeleteProductConfirmation(int productId)
     {
