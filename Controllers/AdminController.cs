@@ -147,19 +147,41 @@ public class AdminController : Controller
     public IActionResult AdminAddProduct()
     {
         Product newProduct = new Product();
+        
         return View("~/Pages/Admin/AdminAddProduct.cshtml", newProduct);
     }
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult AdminAddProduct(Product product)
+    public IActionResult AdminAddProduct(Product product, byte CategoryId)
     {
         if (ModelState.IsValid)
         {
+            // Add the product to the database
             _repository.AddProduct(product);
             _repository.SaveChanges();
+
+            // Create a new product-category record
+            var productCategory = new ProductCategory
+            {
+                ProductId = product.ProductId,
+                CategoryId = CategoryId
+            };
+            
+            _repository.SaveChanges();
+
             return RedirectToAction("AdminProductList");
         }
-        return View("~/Pages/Admin/AdminAddProduct.cshtml", product);
+        Product newProduct = new Product();
+        
+        return View("~/Pages/Admin/AdminAddProduct.cshtml", newProduct);
+    }
+
+    
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public IActionResult ReviewOrders()
+    {
+        return View("~/Views/Home/ReviewOrders.cshtml");
     }
 }

@@ -7,7 +7,7 @@ namespace BrickVault.Models;
 
 public partial class Product
 {
-    public ICollection<ProductCategory> ProductCategories { get; set; }
+    public ICollection<ProductCategory>? ProductCategories { get; set; }
     [Key]
     public byte ProductId { get; set; }
 

@@ -27,6 +27,11 @@ namespace BrickVault.Models
         {
             _context.Products.Add(product);
         }
+
+        public void AddProductCategory(ProductCategory productCategory)
+        {
+            _context.ProductCategories.Add(productCategory);
+        }
         
         public void UpdateProduct(Product product)
         {
@@ -36,18 +41,13 @@ namespace BrickVault.Models
                 _context.Entry(existingProduct).CurrentValues.SetValues(product);
             }
         }
-
-
-
-
+        
         public void DeleteProduct(Product product)
         {
             _context.Products.Remove(product);
             _context.SaveChanges();
         }
-
-
-
+        
         public void SaveChanges()
         {
             _context.SaveChanges();

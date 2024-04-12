@@ -14,6 +14,7 @@ namespace BrickVault.Models
 
         void DeleteProduct(Product product);
         void UpdateProduct(Product product);
+        void AddProductCategory(ProductCategory productCategory);
 
     }
 }

@@ -87,14 +87,7 @@ public class HomeController : Controller
         return View(model);
     }
 
-
-    
     public IActionResult AboutUs()
-    {
-        return View();
-    }
-    [Authorize(Roles = "Customer")] // giving an access denied because user needs to be assigned to a member. need to figure out how i can better manage this
-    public IActionResult ReviewOrders()
     {
         return View();
     }
