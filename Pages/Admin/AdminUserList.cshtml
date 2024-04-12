@@ -7,15 +7,15 @@
 
 <h2>@ViewBag.Title</h2>
 
-<table>
+<table class="table table-bordered">
     <thead>
     <tr>
         <th>ID</th>
         <th>Username</th>
         <th>Email</th>
         <th>Phone Number</th>
-        <th>Edit</th>
-        <th>Delete</th>
+        <th></th>
+        <th></th>
         
         <!-- Add more headers as needed -->
     </tr>
@@ -29,9 +29,9 @@
             <td>@user.UserName</td>
             <td>@user.Email</td>
             <td>@user.PhoneNumber</td>
-            <td>@string.Join(", ", user.Roles.Select(role => role.Name))</td>
-            <td><a asp-action="AdminEditUsers" asp-route-id="@user.Id">Edit</a></td>
-            <td><a asp-action="DeleteUserConfirmation" asp-route-id="@user.Id">Delete</a></td>
+            @* <td>@string.Join(", ", user.Roles.Select(role => role.Name))</td> *@
+            <td><a class="btn btn-primary" asp-action="AdminEditUsers" asp-route-id="@user.Id">Edit</a></td>
+            <td><a class="btn btn-danger" asp-action="DeleteUserConfirmation" asp-route-id="@user.Id">Delete</a></td>
 
 
             <!-- Add more data cells as needed -->
