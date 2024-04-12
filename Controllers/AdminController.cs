@@ -286,10 +286,11 @@ public class AdminController : Controller
     [Authorize(Roles = "Admin")]
     public IActionResult ReviewOrders()
     {
+        DateOnly limit = DateOnly.FromDateTime(DateTime.Now.AddMonths(-4));
+
         IQueryable<Order> orders = _repository.Orders
-            .Where(x => x.Fraud == 1)
-            .OrderByDescending(x => x.Date)
-            .Take(10);
+            .Where(x => x.Fraud == 1 && x.Date >= limit)
+            .OrderByDescending(x => x.Date);
 
         ViewBag.Orders = orders;
         
