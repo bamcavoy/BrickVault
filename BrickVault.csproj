@@ -40,20 +40,31 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Data\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <AdditionalFiles Include="Pages\Admin\AdminAddProduct.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminAddUser.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminEditProduct.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminEditUsers.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminProductList.cshtml" />
-      <AdditionalFiles Include="Pages\Admin\AdminReviewOrders.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminUserList.cshtml" />
       <AdditionalFiles Include="Pages\Shared\_Layout.cshtml" />
       <AdditionalFiles Include="Pages\Shared\_LoginPartial.cshtml" />
       <AdditionalFiles Include="Pages\Shared\_ValidationScriptsPartial.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Data\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Data\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Remove="Data\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Data\**" />
     </ItemGroup>
 
 </Project>
