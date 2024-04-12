@@ -7,16 +7,14 @@ namespace BrickVault.Models
         {
             _context = context;
         }
-
         public IQueryable<AspNetUser> AspNetUsers => _context.AspNetUsers;
-
-
         public IQueryable<Product> Products => _context.Products;
         public IQueryable<Category> Categories => _context.Categories;
-
         public IQueryable<ItemRecommendation> ItemRecommendations => _context.ItemRecommendations;
         
         public IQueryable<Customer> Customers { get; }
+        
+        public IQueryable<Order> Orders => _context.Orders;
 
         public void ReseedProductId()
         {

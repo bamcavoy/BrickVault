@@ -189,14 +189,6 @@ public class AdminController : Controller
     }
 
     [Authorize(Roles = "Admin")]
-
-    public IActionResult AdminReviewOrders()
-    {
-        //In this method, we want the admin to be able to look at fraudulent activity, and have a way to resolve this solution??
-        return View("~/Pages/Admin/AdminReviewOrders.cshtml");
-    }
-
-    [Authorize(Roles = "Admin")]
     public IActionResult AdminAddUser()
     {
         return View("~/Pages/Admin/AdminAddUser.cshtml");
@@ -294,6 +286,13 @@ public class AdminController : Controller
     [Authorize(Roles = "Admin")]
     public IActionResult ReviewOrders()
     {
+        IQueryable<Order> orders = _repository.Orders
+            .Where(x => x.Fraud == 1)
+            .OrderByDescending(x => x.Date)
+            .Take(10);
+
+        ViewBag.Orders = orders;
+        
         return View("~/Views/Home/ReviewOrders.cshtml");
     }
 }

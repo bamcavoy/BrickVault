@@ -1,11 +1,13 @@
 @{
     ViewData["Title"] = "Review Orders";
-    var random = new Random();
+    IQueryable<Order> orders = ViewBag.Orders;
 }
 
 <h1>Review Orders</h1>
 <br/>
 <div class="container align-content-center col-10">
+    <h5>The following orders were marked as <span class="fw-bold">"Fraudulent"</span> by our predictive model.</h5>
+    <br/>
     <table class="table table-hover">
         <thead class="dark">
         <tr>
@@ -13,20 +15,160 @@
             <th>Country of Transaction</th>
             <th>Total</th>
             <th>Order Date</th>
-            <th>Flag</th>
+            <th></th>
         </tr>
         </thead>
         <tbody>
-        @for (var i = 0; i < 10; i++)
+        @foreach (Order o in orders)
         {
             <tr>
-                <td>Row @i</td>
-                <td>USA</td>
-                <td>@random.Next(0, 101)</td>
-                <td>10/22/2023</td>
-                <td>Needs review!</td>
+                <td>@o.TransactionId</td>
+                <td>@o.CountryOfTransaction</td>
+                <td>$@o.Amount</td>
+                <td>@o.Date</td>
+                <td>
+                    @* <button class="btn rounded-pill btn-warning review-btn" data-toggle="modal" data-target="#orderModal" *@
+                    @*         data-transactionid="@o.TransactionId" *@
+                    @*         data-country="@o.CountryOfTransaction" *@
+                    @*         data-amount="@o.Amount" *@
+                    @*         data-date="@o.Date" *@
+                    @*         data-customerid="@o.CustomerId" *@
+                    @*         data-dayofweek="@o.DayOfWeek" *@
+                    @*         data-entrymode="@o.EntryMode" *@
+                    @*         data-typeoftransaction="@o.TypeOfTransaction" *@
+                    @*         data-shippingcountry="@o.ShippingAddress" *@
+                    @*         data-bank="@o.Bank" *@
+                    @*         data-typeofcard="@o.TypeOfCard"> *@
+                    @*     Review Order *@
+                    @* </button> *@
+                    <button class="btn btn-warning rounded-pill" data-toggle="modal" data-target="#soonModal">
+                        Needs Review!
+                    </button>
+                </td>
             </tr>
         }
         </tbody>
     </table>
 </div>
+
+<!-- Modal -->
+<div class="modal fade" id="orderModal" tabindex="-1" role="dialog" aria-labelledby="orderModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="orderModalLabel">Order Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Transaction ID:</strong> <span id="modalTransactionId"></span></p>
+                <p><strong>Country:</strong> <span id="modalCountry"></span></p>
+                <p><strong>Amount:</strong> <span id="modalAmount"></span></p>
+                <p><strong>Date:</strong> <span id="modalDate"></span></p>
+                <!-- Add more order details here if needed -->
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Transaction ID:</th>
+                        <td><span id="modalTransactionId"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Customer ID:</th>
+                        <td><span id="modalCustomerId"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Date:</th>
+                        <td><span id="modalDate"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Day of Week:</th>
+                        <td><span id="modalDayofweek"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Time:</th>
+                        <td><span id="modalTime"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Entry Mode:</th>
+                        <td><span id="modalEntrymode"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Amount:</th>
+                        <td><span id="modalAmount"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Type of Transaction:</th>
+                        <td><span id="modalTypeoftransaction"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Country of Transaction:</th>
+                        <td><span id="modalCountryoftransaction"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Shipping Address:</th>
+                        <td><span id="modalShippingaddress"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Bank:</th>
+                        <td><span id="modalBank"></span></td>
+                    </tr>
+                    <tr>
+                        <th>Type of Card:</th>
+                        <td><span id="modalTypeofcard"></span></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="soonModal" tabindex="-1" role="dialog" aria-labelledby="soonModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="soonModalLabel">Coming Soon!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>This feature is currently under development. Stay tuned!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    // JavaScript to handle modal content population
+    $(document).ready(function () {
+        $('.review-btn').click(function () {
+            var transactionId = $(this).data('transactionid');
+            var country = $(this).data('country');
+            var amount = $(this).data('amount');
+            var date = $(this).data('date');
+            var customerid = $(this).data('customerid');
+            var dayofweek = $(this).data('dayofweek');
+            var entrymode = $(this).data('entrymode');
+            var typeoftransaction = $(this).data('typeoftransaction');
+            var shippingcountry = $(this).data('shippingcountry');
+            var bank = $(this).data('bank');
+            var typeofcard = $(this).data('typeofcard');
+
+            $('#modalTransactionId').text(transactionId);
+            $('#modalCountry').text(country);
+            $('#modalAmount').text(amount);
+            $('#modalDate').text(date);
+            $('#modalCustomerId').text(customerid);
+            $('#modalDayofweek').text(dayofweek);
+            $('#modalEntrymode').text(entrymode);
+            $('#modalTypeoftransaction').text(typeoftransaction);
+            $('#modalShippingaddress').text(shippingcountry);
+            $('#modalBank').text(bank);
+            $('#modalTypeofcard').text(typeofcard);
+        });
+    });
+</script>

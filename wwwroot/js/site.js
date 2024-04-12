@@ -60,4 +60,6 @@ function clearFilters() {
     // document.querySelector("form").submit();
 }
 
+
+
 // Write your JavaScript code.
