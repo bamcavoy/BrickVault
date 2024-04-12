@@ -1,57 +1,80 @@
+@{
+    ViewData["Title"] = "Check Out";
+}
+
 @model Order
-<h1 class="text-center fw-bold h1">Check Out Now</h1> <br/>
-<h2 class="text-center h2">Please enter details below:</h2><br/>
-<form asp-action="Checkout" method="post">
-    <h3>Ship to</h3>
-    <br/>
-    <div class="dropdown">
-        <label for="CountryOfTransaction">Country of Transaction:</label> <br/>
-        <select asp-for="CountryOfTransaction" class="dropdown btn btn-secondary" id="CountryOfTransaction">
-            <option value="" selected>Please select a country</option>
-            <option value="China">China</option>
-            <option value="India">India</option>
-            <option value="Russia">Russia</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="USA">USA</option>
-        </select>
+<h2>Checkout</h2>
+<br/>
+<div class="col-12">
+    <form asp-action="Checkout" method="post">
+        <div class="row">
+            <div class="col-4">
+                <label asp-for="CountryOfTransaction">Billing Address</label>
+                <br/>
+                <div class="dropdown">
+                    <select asp-for="CountryOfTransaction" class="form-select">
+                        <option value="" selected>-Select a country-</option>
+                        <option value="China">China</option>
+                        <option value="India">India</option>
+                        <option value="Russia">Russia</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="USA">USA</option>
+                    </select>
+                    <br/>
+                </div>
+            </div>
+            <div class="col-4">
+                <label asp-for="ShippingAddress">Shipping Address</label>
+                <br/>
+                <div class="dropdown">
+                    <select asp-for="ShippingAddress" class="form-select">
+                        <option value="" selected>-Select a country-</option>
+                        <option value="China">China</option>
+                        <option value="India">India</option>
+                        <option value="Russia">Russia</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="USA">USA</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-4">
+                <label asp-for="Bank">Bank:</label>
+                <br/>
+                <div class="dropdown">
+                    <select asp-for="Bank" class="form-select">
+                        <option value="" selected>-Select a bank-</option>
+                        <option value="HSBC">HSBC</option>
+                        <option value="Halifax">Halifax</option>
+                        <option value="Lloyds">Lloyds</option>
+                        <option value="Metro">Metro</option>
+                        <option value="Monzo">Monzo</option>
+                        <option value="RBS">RBS</option>
+                        <option value="Barclays">Barclays</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-4">
+                <label asp-for="TypeOfCard">Type of Card:</label>
+                <div class="dropdown">
+                    <select asp-for="TypeOfCard" class="form-select">
+                        <option value="" selected>-Select a type-</option>
+                        <option value="Visa">Visa</option>
+                        <option value="MasterCard">MasterCard</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <input type="hidden" asp-for="EntryMode" value="CVC"/>
+        <input type="hidden" asp-for="TypeOfTransaction" value="Online"/>
         <br/>
-    </div>
-    <h3>Address</h3>
-    <div class="form-group">
-        <label for="ShippingAddress">Shipping Address:</label>
-        <select asp-for="ShippingAddress" class="form-control" id="ShippingAddress">
-            <option value="India">India</option>
-            <option value="Russia">Russia</option>
-            <option value="USA">USA</option>
-            <option value="United Kingdom">United Kingdom</option>
-            <option value="China">China</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="Bank">Bank:</label>
-        <select asp-for="Bank" class="form-control" id="Bank">
-            <option value="HSBC">HSBC</option>
-            <option value="Halifax">Halifax</option>
-            <option value="Lloyds">Lloyds</option>
-            <option value="Metro">Metro</option>
-            <option value="Monzo">Monzo</option>
-            <option value="RBS">RBS</option>
-            <option value="Barclays">Barclays</option>
-        </select>
-    </div>
-    <div class="form-group">
-        <label for="TypeOfCard">Type of Card:</label>
-        <select asp-for="TypeOfCard" class="form-control" id="TypeOfCard">
-            <option value="Visa">Visa</option>
-            <option value="MasterCard">MasterCard</option>
-        </select>
-    </div>
-    <div class="text-center">
-        <input class="btn btn-primary" type="submit" value="Complete Order" />
-    </div>
-    <input type="hidden" asp-for="EntryMode" value="CVC" />
-    <input type="hidden" asp-for="TypeOfTransaction" value="Online" />
-</form>
+        <div class="text-center">
+            <button type="submit" class="btn btn-success">Check Out</button>
+        </div>
+    </form>
+</div>
+
 
 
 
