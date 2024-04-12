@@ -46,7 +46,6 @@
     <ItemGroup>
       <AdditionalFiles Include="Pages\Admin\AdminAddProduct.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminAddUser.cshtml" />
-      <AdditionalFiles Include="Pages\Admin\AdminDashboard.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminEditProduct.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminEditUsers.cshtml" />
       <AdditionalFiles Include="Pages\Admin\AdminProductList.cshtml" />

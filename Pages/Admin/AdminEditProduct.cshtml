@@ -1,7 +1,7 @@
 @model BrickVault.Models.Product
 
 @{
-    ViewBag.Title = "Edit Product";
+    ViewData["Title"] = "Edit Product";
     Layout = "_Layout";
 }
 
@@ -43,12 +43,12 @@
                 <br/>
                 <input asp-for="NumParts" class="form-control"/>
             </div>
-            <div class="form-group">
-                <label asp-for-id="ProductCategories">Categories</label>
-                <select asp-for="ProductCategories" asp-items="ViewBag.Categories" class="form-control" multiple>
-                </select>
-                <span asp-validation-for="ProductCategories" class="text-danger"></span>
-            </div>
+            @* <div class="form-group"> *@
+            @*     <label asp-for-id="ProductCategories">Categories</label> *@
+            @*     <select asp-for="ProductCategories" asp-items="ViewBag.Categories" class="form-control" multiple> *@
+            @*     </select> *@
+            @*     <span asp-validation-for="ProductCategories" class="text-danger"></span> *@
+            @* </div> *@
 
 
             <div class="col-2">
