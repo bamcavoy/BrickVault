@@ -32,9 +32,13 @@
             @* <td>@string.Join(", ", user.Roles.Select(role => role.Name))</td> *@
             <td><a class="btn btn-primary" asp-action="AdminEditUsers" asp-route-id="@user.Id">Edit</a></td>
             <td><a class="btn btn-danger" asp-action="DeleteUserConfirmation" asp-route-id="@user.Id">Delete</a></td>
-
             <!-- Add more data cells as needed -->
         </tr>
     }
+    <tr>
+        <td><a asp-page="/Account/Register" asp-area="Identity" class="btn btn-success align-content-end">Add</a></td>
+    </tr>
+    
     </tbody>
+    
 </table>
