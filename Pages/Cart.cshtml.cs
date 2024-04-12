@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace BrickVault.Pages
 {
-    [Authorize(Roles = "Customer")]
+    [Authorize(Roles = "Customer, Admin")]
     public class CartModel : PageModel
     {
         private ILegoRepository _repo;

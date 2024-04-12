@@ -78,6 +78,7 @@ public class AdminController : Controller
         return View("~/Pages/Admin/AdminEditProduct.cshtml", product);
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult AdminUserList()
     {
         var identityUsers = _userManager.Users.ToList(); // Get the list of IdentityUser objects
@@ -207,17 +208,17 @@ public class AdminController : Controller
     }
 
 
-    [Authorize(Roles = "Admin")]
-    public IActionResult AdminUserList()
-    {
-        var usersQuery = _repository.AspNetUsers; // Keep it as IQueryable
-        if (usersQuery == null)
-        {
-            // Handle the null case, maybe log it or return a different view
-            return View("~/Pages/Admin/AdminUserList.cshtml");
-        }
-        return View("~/Pages/Admin/AdminUserList.cshtml", usersQuery.ToList()); // Materialize the query here
-    }
+    // [Authorize(Roles = "Admin")]
+    // public IActionResult AdminUserList()
+    // {
+    //     var usersQuery = _repository.AspNetUsers; // Keep it as IQueryable
+    //     if (usersQuery == null)
+    //     {
+    //         // Handle the null case, maybe log it or return a different view
+    //         return View("~/Pages/Admin/AdminUserList.cshtml");
+    //     }
+    //     return View("~/Pages/Admin/AdminUserList.cshtml", usersQuery.ToList()); // Materialize the query here
+    // }
 
     [Authorize(Roles = "Admin")]
 

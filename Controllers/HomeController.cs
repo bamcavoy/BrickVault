@@ -23,7 +23,12 @@ public class HomeController : Controller
     public IActionResult Index()
     {
         List<int> topItems = [27, 33, 34, 37, 24];
-        
+
+        if (User.IsInRole("Customer"))
+        {
+            topItems = [9, 25, 17, 16, 37];
+        }
+
         ViewBag.Products = _repo.Products
             .Where(x => topItems.Contains(x.ProductId))
             .ToList();
