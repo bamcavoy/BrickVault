@@ -13,12 +13,10 @@
         <th>ID</th>
         <th>Username</th>
         <th>Email</th>
-        <th>Email Confirmed</th>
         <th>Phone Number</th>
-        <th>Roles</th>
+        <th>Edit</th>
+        <th>Delete</th>
         
-        
-        <th>Test</th>
         <!-- Add more headers as needed -->
     </tr>
     </thead>
@@ -30,9 +28,12 @@
             <td>@user.Id</td>
             <td>@user.UserName</td>
             <td>@user.Email</td>
-            <td>@user.EmailConfirmed</td>
             <td>@user.PhoneNumber</td>
-            <td>@user.Roles</td>
+            <td>@string.Join(", ", user.Roles.Select(role => role.Name))</td>
+            <td><a asp-action="AdminEditUsers" asp-route-id="@user.Id">Edit</a></td>
+            <td><a asp-action="DeleteUserConfirmation" asp-route-id="@user.Id">Delete</a></td>
+
+
             <!-- Add more data cells as needed -->
         </tr>
     }

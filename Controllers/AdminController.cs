@@ -3,20 +3,24 @@ using Azure;
 using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace BrickVault.Controllers;
 
 public class AdminController : Controller
 {
     private readonly ILegoRepository _repository;
+    private readonly UserManager<IdentityUser> _userManager;
     private readonly ILogger<AdminController> _logger;
-    
-    public AdminController(ILegoRepository repository, ILogger<AdminController> logger)
+
+    public AdminController(ILegoRepository repository, ILogger<AdminController> logger, UserManager<IdentityUser>usermanager)
     {
         _repository = repository;
         _logger = logger;
+        _userManager = usermanager;
     }
 
     [HttpGet]
@@ -49,8 +53,11 @@ public class AdminController : Controller
         {
             return NotFound();
         }
+
+        ViewBag.Categories = new SelectList(_repository.Categories, "CategoryId", "Name");
         return View("~/Pages/Admin/AdminEditProduct.cshtml", product);
     }
+
 
     [HttpPost]
     [Authorize(Roles = "Admin")]
@@ -71,14 +78,117 @@ public class AdminController : Controller
         return View("~/Pages/Admin/AdminEditProduct.cshtml", product);
     }
 
+    public IActionResult AdminUserList()
+    {
+        var identityUsers = _userManager.Users.ToList(); // Get the list of IdentityUser objects
+
+        // Convert the list of IdentityUser objects to a list of AspNetUser objects
+        var aspNetUsers = identityUsers.Select(iu => new AspNetUser
+        {
+            Id = iu.Id,
+            UserName = iu.UserName,
+            Email = iu.Email,
+            PhoneNumber = iu.PhoneNumber
+            // Map other properties as needed
+        }).ToList();
+
+        // Pass the list of AspNetUser objects to the view
+        return View("~/Pages/Admin/AdminUserList.cshtml", aspNetUsers);
+    }  
+    [HttpGet]
+    public async Task<IActionResult> AdminEditUsers(string id)
+    {
+        var identityUser = await _userManager.FindByIdAsync(id);
+        if (identityUser == null)
+        {
+            return NotFound();
+        }
+
+        var aspNetUser = new AspNetUser
+        {
+            Id = identityUser.Id,
+            UserName = identityUser.UserName,
+            Email = identityUser.Email,
+            PhoneNumber = identityUser.PhoneNumber,
+            // Map other properties as needed
+        };
+
+        return View("~/Pages/Admin/AdminEditUsers.cshtml", aspNetUser);
+    }
+
+
+    [HttpPost]
+    public async Task<IActionResult> AdminEditUsers(string id, AspNetUser updatedUser)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        if (ModelState.IsValid)
+        {
+            // Update the user properties
+            user.UserName = updatedUser.UserName;
+            user.Email = updatedUser.Email;
+            user.PhoneNumber = updatedUser.PhoneNumber;
+            // Add other properties as needed
+
+            var result = await _userManager.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("AdminUserList");
+            }
+            else
+            {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+            }
+        }
+
+        return View("~/Pages/Admin/AdminEditUsers.cshtml", updatedUser);
+    }
+    
+    [HttpGet]
+    public async Task<IActionResult> DeleteUserConfirmation(string id)
+    {
+        var user = await _userManager.FindByIdAsync(id);
+        if (user == null)
+        {
+            return NotFound();
+        }
+
+        var aspNetUser = new AspNetUser
+        {
+            Id = user.Id,
+            UserName = user.UserName,
+            // Map other properties as needed
+        };
+
+        return View("~/Pages/Admin/DeleteUserConfirmation.cshtml", aspNetUser);
+    }
+
     [HttpPost]
     [Authorize(Roles = "Admin")]
-    public IActionResult AdminEditUsers()
+    public async Task<IActionResult> DeleteUserConfirmed(string id)
     {
-        return View("~/Pages/Admin/AdminEditUsers.cshtml");
+        var user = await _userManager.FindByIdAsync(id);
+        if (user != null)
+        {
+            var result = await _userManager.DeleteAsync(user);
+            if (!result.Succeeded)
+            {
+                // Handle errors (optional)
+            }
+        }
+
+        return RedirectToAction("AdminUserList");
     }
 
     [Authorize(Roles = "Admin")]
+
     public IActionResult AdminReviewOrders()
     {
         //In this method, we want the admin to be able to look at fraudulent activity, and have a way to resolve this solution??
@@ -95,6 +205,7 @@ public class AdminController : Controller
     {
         //MakeDaFunction
     }
+
 
     [Authorize(Roles = "Admin")]
     public IActionResult AdminUserList()

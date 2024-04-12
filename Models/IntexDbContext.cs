@@ -9,6 +9,7 @@ public partial class IntexDbContext : IdentityDbContext
 {
     public IntexDbContext()
     {
+        
     }
 
     public IntexDbContext(DbContextOptions<IntexDbContext> options)
@@ -25,6 +26,8 @@ public partial class IntexDbContext : IdentityDbContext
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
     public virtual DbSet<UserRecommendation> UserRecommendations { get; set; }
     public IQueryable<AspNetUser> AspNetUsers { get; set; }
+    // public DbSet<AspNetUserRole> AspNetUserRoles { get; set; }
+
 
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
