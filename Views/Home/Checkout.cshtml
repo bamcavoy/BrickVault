@@ -7,83 +7,72 @@
 <br/>
 <div class="col-12">
     @* <form asp-action="Checkout" method="post"> *@
-        <div class="row">
-            <div class="col-4">
-                <label asp-for="CountryOfTransaction">Billing Address</label>
+    <div class="row">
+        <div class="col-4">
+            <label asp-for="CountryOfTransaction">Billing Address</label>
+            <br/>
+            <div class="dropdown">
+                <select asp-for="CountryOfTransaction" class="form-select">
+                    <option value="" selected>-Select a country-</option>
+                    <option value="China">China</option>
+                    <option value="India">India</option>
+                    <option value="Russia">Russia</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="USA">USA</option>
+                </select>
                 <br/>
-                <div class="dropdown">
-                    <select asp-for="CountryOfTransaction" class="form-select">
-                        <option value="" selected>-Select a country-</option>
-                        <option value="China">China</option>
-                        <option value="India">India</option>
-                        <option value="Russia">Russia</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="USA">USA</option>
-                    </select>
-                    <br/>
-                </div>
-            </div>
-            <div class="col-4">
-                <label asp-for="ShippingAddress">Shipping Address</label>
-                <br/>
-                <div class="dropdown">
-                    <select asp-for="ShippingAddress" class="form-select">
-                        <option value="" selected>-Select a country-</option>
-                        <option value="China">China</option>
-                        <option value="India">India</option>
-                        <option value="Russia">Russia</option>
-                        <option value="United Kingdom">United Kingdom</option>
-                        <option value="USA">USA</option>
-                    </select>
-                </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-4">
-                <label asp-for="Bank">Bank:</label>
-                <br/>
-                <div class="dropdown">
-                    <select asp-for="Bank" class="form-select">
-                        <option value="" selected>-Select a bank-</option>
-                        <option value="HSBC">HSBC</option>
-                        <option value="Halifax">Halifax</option>
-                        <option value="Lloyds">Lloyds</option>
-                        <option value="Metro">Metro</option>
-                        <option value="Monzo">Monzo</option>
-                        <option value="RBS">RBS</option>
-                        <option value="Barclays">Barclays</option>
-                    </select>
-                </div>
-            </div>
-            <div class="col-4">
-                <label asp-for="TypeOfCard">Type of Card:</label>
-                <div class="dropdown">
-                    <select asp-for="TypeOfCard" class="form-select">
-                        <option value="" selected>-Select a type-</option>
-                        <option value="Visa">Visa</option>
-                        <option value="MasterCard">MasterCard</option>
-                    </select>
-                </div>
+        <div class="col-4">
+            <label asp-for="ShippingAddress">Shipping Address</label>
+            <br/>
+            <div class="dropdown">
+                <select asp-for="ShippingAddress" class="form-select">
+                    <option value="" selected>-Select a country-</option>
+                    <option value="China">China</option>
+                    <option value="India">India</option>
+                    <option value="Russia">Russia</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="USA">USA</option>
+                </select>
             </div>
         </div>
-        <input type="hidden" asp-for="EntryMode" value="CVC"/>
-        <input type="hidden" asp-for="TypeOfTransaction" value="Online"/>
-        <br/>
-        <div class="text-center">
-            <a href="@Url.Action("OrderSubmit", "Home")" class="btn btn-success">Check Out</button>
+    </div>
+    <div class="row">
+        <div class="col-4">
+            <label asp-for="Bank">Bank:</label>
+            <br/>
+            <div class="dropdown">
+                <select asp-for="Bank" class="form-select">
+                    <option value="" selected>-Select a bank-</option>
+                    <option value="HSBC">HSBC</option>
+                    <option value="Halifax">Halifax</option>
+                    <option value="Lloyds">Lloyds</option>
+                    <option value="Metro">Metro</option>
+                    <option value="Monzo">Monzo</option>
+                    <option value="RBS">RBS</option>
+                    <option value="Barclays">Barclays</option>
+                </select>
+            </div>
         </div>
-    @* </form> *@
+        <div class="col-4">
+            <label asp-for="TypeOfCard">Type of Card:</label>
+            <div class="dropdown">
+                <select asp-for="TypeOfCard" class="form-select">
+                    <option value="" selected>-Select a type-</option>
+                    <option value="Visa">Visa</option>
+                    <option value="MasterCard">MasterCard</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" asp-for="EntryMode" value="CVC"/>
+    <input type="hidden" asp-for="TypeOfTransaction" value="Online"/>
+    <br/>
+    <div class="text-center">
+        <a href="@Url.Action("OrderSubmit", "Home")" class="btn btn-success">Check Out</a>
+    </div>
+    <br/>
+    <br/>
 </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+    @* </form> *@
