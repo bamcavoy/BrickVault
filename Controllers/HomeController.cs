@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace BrickVault.Controllers;
@@ -11,10 +12,12 @@ public class HomeController : Controller
 {
     private IConfiguration _configuration;
     private ILegoRepository _repo;
+    // private readonly SignInManager<AspNetUser> _signInManager;
     public HomeController(IConfiguration configuration, ILegoRepository tmp)
     {
         _configuration = configuration;
         _repo = tmp;
+        // _signInManager = signInManager;
     }
     
     public IActionResult Index()
@@ -119,4 +122,17 @@ public class HomeController : Controller
         
         return View();
     }
+    
+    // public IActionResult Checkout(Cart cart)
+    // {
+    //     // Check if user is signed in
+    //     if (_signInManager.IsSignedIn(User))
+    //     {
+    //         // Get the current signed-in user's email
+    //         string? userEmail = _signInManager.UserManager.GetUserName(User);
+    //         
+    //     }
+    //
+    //     return View();
+    // }
 }

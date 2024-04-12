@@ -123,27 +123,27 @@ app.UseSession();
 app.UseRouting();
 
 // CSP HEADER
-app.Use(async (context, next) =>
-{
-    context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-    context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
-    context.Response.Headers.Add("Referrer-Policy", "no-referrer");
-
-    // Define your Content-Security-Policy
-    string csp = "default-src 'self'; " +
-                 "script-src 'self' 'unsafe-inline'; " +
-                 "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " + // For Google Fonts
-                 "img-src 'self' data: https://m.media-amazon.com https://www.lego.com https://images.brickset.com https://www.brickeconomy.com; " + // Domains for images
-                 "font-src 'self' https://fonts.gstatic.com;"; // For Google Fonts
-
-    // Add Content-Security-Policy without overwriting existing headers
-    if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
-    {
-        context.Response.Headers.Add("Content-Security-Policy", csp);
-    }
-
-    await next();
-});
+// app.Use(async (context, next) =>
+// {
+//     context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+//     context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+//     context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+//
+//     // Define your Content-Security-Policy
+//     string csp = "default-src 'self'; " +
+//                  "script-src 'self' 'unsafe-inline'; " +
+//                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " + // For Google Fonts
+//                  "img-src 'self' data: https://m.media-amazon.com https://www.lego.com https://images.brickset.com https://www.brickeconomy.com; " + // Domains for images
+//                  "font-src 'self' https://fonts.gstatic.com;"; // For Google Fonts
+//
+//     // Add Content-Security-Policy without overwriting existing headers
+//     if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
+//     {
+//         context.Response.Headers.Add("Content-Security-Policy", csp);
+//     }
+//
+//     await next();
+// });
 
 app.UseAuthorization();
 
