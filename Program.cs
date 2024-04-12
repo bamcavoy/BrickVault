@@ -5,6 +5,7 @@ using Azure.Identity;
 using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Authentication.Cookies;
 
+
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
 var configuration = builder.Configuration;
@@ -31,6 +32,7 @@ builder.Services.AddDbContext<IntexDbContext>(options =>
 
 builder.Services.AddScoped<ILegoRepository, EFLegoRepository>();
 
+
 // add session
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddSession();
@@ -40,11 +42,12 @@ builder.Services.AddScoped<Cart>(sp => SessionCart.GetCart(sp));
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-    // .AddRoles<IdentityRole>()
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<IntexDbContext>();
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+// CONFIGURE PASSWORD SETTINGS
 builder.Services.Configure<IdentityOptions>(options =>
 {
     // Default Lockout settings.
@@ -66,7 +69,7 @@ builder.Services.Configure<IdentityOptions>(options =>
         "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
     options.User.RequireUniqueEmail = false;
 });
-builder.Services.ConfigureApplicationCookie(options =>
+builder.Services.ConfigureApplicationCookie(options => // Cookie Settings
 {
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
     options.Cookie.Name = "YourAppCookieName";
@@ -79,7 +82,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.SlidingExpiration = true;
 });
 
-// Add services to the container.
+// Add services to the container. EXTRA REQUIREMENT FOR INTEX
 builder.Services.AddDistributedMemoryCache(); // Required to enable session state
 
 builder.Services.AddSession(options => // EXTRA REQUIREMENT FOR INTEX. MANAGES USER'S SESSION TO IMPEDE FROM SESSION HIJACKING 
@@ -124,6 +127,29 @@ app.UseSession();
 
 app.UseRouting();
 
+// CSP HEADER
+// app.Use(async (context, next) =>
+// {
+//     context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+//     context.Response.Headers.Add("X-XSS-Protection", "1; mode=block");
+//     context.Response.Headers.Add("Referrer-Policy", "no-referrer");
+//
+//     // Define your Content-Security-Policy
+//     string csp = "default-src 'self'; " +
+//                  "script-src 'self' 'unsafe-inline'; " +
+//                  "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; " + // For Google Fonts
+//                  "img-src 'self' data: https://m.media-amazon.com https://www.lego.com https://images.brickset.com https://www.brickeconomy.com; " + // Domains for images
+//                  "font-src 'self' https://fonts.gstatic.com;"; // For Google Fonts
+//
+//     // Add Content-Security-Policy without overwriting existing headers
+//     if (!context.Response.Headers.ContainsKey("Content-Security-Policy"))
+//     {
+//         context.Response.Headers.Add("Content-Security-Policy", csp);
+//     }
+//
+//     await next();
+// });
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -135,18 +161,38 @@ app.MapControllerRoute(
 
 app.MapRazorPages();
 
-// using (var scope = app.Services.CreateScope())
-// {
-//     var roleManager = 
-//         scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
-//
-//     var roles = new[] { "Admin", "Manager", "Member" };
-//     foreach (var role in roles )
-//     {
-//         if (!await roleManager.RoleExistsAsync(role))
-//             await roleManager.CreateAsync(new IdentityRole(role));
-//     }
-//
-//
-// }
+// ROLE BASED AUTHENTICATION
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = 
+        scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+
+    var roles = new[] { "Admin", "Customer" };
+    foreach (var role in roles )
+    {
+        if (!await roleManager.RoleExistsAsync(role))
+            await roleManager.CreateAsync(new IdentityRole(role));
+    }
+
+
+}
+using (var scope = app.Services.CreateScope())
+{
+    var userManager = 
+        scope.ServiceProvider.GetRequiredService<UserManager<IdentityUser>>();
+
+    string email = "admin@admin.com";
+    string password = "Test12345!";
+
+    if (await userManager.FindByEmailAsync(email) == null)
+    {
+        var user = new IdentityUser();
+        user.UserName = email;
+        user.Email = email;
+
+        await userManager.CreateAsync(user, password);
+
+        await userManager.AddToRoleAsync(user, "Admin");
+    }
+}
 app.Run();

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using BrickVault.Models;
 using BrickVault.Models.ViewModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -23,24 +24,28 @@ public class AdminController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult AdminProductList()
     {
         var products = _repository.Products.ToList();
         return View("~/Pages/Admin/AdminProductList.cshtml", products);
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult AdminDashboard()
     {
         return View();
     }
 
     [HttpDelete]
+    [Authorize(Roles = "Admin")]
     public void DeleteProduct()
     {
         //Make da function
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult AdminEditProduct(int id)
     {
         var product = _repository.Products.FirstOrDefault(p => p.ProductId == id);
@@ -55,6 +60,7 @@ public class AdminController : Controller
 
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult AdminEditProduct(Product product)
     {
         if (ModelState.IsValid)
@@ -165,6 +171,7 @@ public class AdminController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public async Task<IActionResult> DeleteUserConfirmed(string id)
     {
         var user = await _userManager.FindByIdAsync(id);
@@ -180,8 +187,7 @@ public class AdminController : Controller
         return RedirectToAction("AdminUserList");
     }
 
-
-
+    [Authorize(Roles = "Admin")]
 
     public IActionResult AdminReviewOrders()
     {
@@ -189,6 +195,7 @@ public class AdminController : Controller
         return View("~/Pages/Admin/AdminReviewOrders.cshtml");
     }
 
+    [Authorize(Roles = "Admin")]
     public IActionResult AdminAddUser()
     {
         return View("~/Pages/Admin/AdminAddUser.cshtml");
@@ -198,6 +205,21 @@ public class AdminController : Controller
     {
         //MakeDaFunction
     }
+
+
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminUserList()
+    {
+        var usersQuery = _repository.AspNetUsers; // Keep it as IQueryable
+        if (usersQuery == null)
+        {
+            // Handle the null case, maybe log it or return a different view
+            return View("~/Pages/Admin/AdminUserList.cshtml");
+        }
+        return View("~/Pages/Admin/AdminUserList.cshtml", usersQuery.ToList()); // Materialize the query here
+    }
+
+    [Authorize(Roles = "Admin")]
 
     public IActionResult DeleteProductConfirmation(int productId)
     {
@@ -210,6 +232,7 @@ public class AdminController : Controller
     }
 
     [HttpPost]
+    [Authorize(Roles = "Admin")]
     public IActionResult DeleteProductConfirmed(int productId)
     {
         Product product = null;
@@ -231,21 +254,45 @@ public class AdminController : Controller
     }
 
     [HttpGet]
+    [Authorize(Roles = "Admin")]
     public IActionResult AdminAddProduct()
     {
         Product newProduct = new Product();
+        
         return View("~/Pages/Admin/AdminAddProduct.cshtml", newProduct);
     }
 
     [HttpPost]
-    public IActionResult AdminAddProduct(Product product)
+    [Authorize(Roles = "Admin")]
+    public IActionResult AdminAddProduct(Product product, byte CategoryId)
     {
         if (ModelState.IsValid)
         {
+            // Add the product to the database
             _repository.AddProduct(product);
             _repository.SaveChanges();
+
+            // Create a new product-category record
+            var productCategory = new ProductCategory
+            {
+                ProductId = product.ProductId,
+                CategoryId = CategoryId
+            };
+            
+            _repository.SaveChanges();
+
             return RedirectToAction("AdminProductList");
         }
-        return View("~/Pages/Admin/AdminAddProduct.cshtml", product);
+        Product newProduct = new Product();
+        
+        return View("~/Pages/Admin/AdminAddProduct.cshtml", newProduct);
+    }
+
+    
+    [HttpGet]
+    [Authorize(Roles = "Admin")]
+    public IActionResult ReviewOrders()
+    {
+        return View("~/Views/Home/ReviewOrders.cshtml");
     }
 }
