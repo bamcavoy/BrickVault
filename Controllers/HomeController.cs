@@ -116,7 +116,13 @@ public class HomeController : Controller
         return View();
     }
 
+    [HttpGet]
     public IActionResult Checkout()
+    {
+        return View();
+    }
+    
+    public IActionResult OrderSubmit()
     {
         return View();
     }
