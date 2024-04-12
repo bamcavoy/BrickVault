@@ -31,12 +31,6 @@ public class AdminController : Controller
         return View("~/Pages/Admin/AdminProductList.cshtml", products);
     }
 
-    [Authorize(Roles = "Admin")]
-    public IActionResult AdminDashboard()
-    {
-        return View();
-    }
-
     [HttpDelete]
     [Authorize(Roles = "Admin")]
     public void DeleteProduct()
